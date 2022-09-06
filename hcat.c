@@ -10,7 +10,7 @@ void hcat(int fd)
   int n;
   int cnt = 0;
 
-  while ((cnt < nlines) && ((n = read(fd, c, sizeof(c))) > 0))
+  while ((cnt < nlines) && ((n = read(fd, &c, 1)) > 0))
   {
     if (c == '\n')
       ++cnt;
@@ -29,7 +29,7 @@ void hcat(int fd)
 
 int main(int argc, char *argv[])
 {
-  int fd, i;
+  int fd;
 
   if (argc != 3 || !argv[1])
   {
