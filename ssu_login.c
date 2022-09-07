@@ -9,23 +9,45 @@ char pwdID[16][32];
 void get_user_list()
 {
     int fd;
-//    char user[32];
-//    char pwd[32];
 
     fd = open("list.txt", O_RDONLY);
 
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 16; i++)
     {
+        int j = -1;
+        while (++j < 32)
+        {
+            char c;
+            read(fd, &c, 1);
+            if (c == ' ')
+            {
+                userID[i][j] = '\0';
+                break;
+            }
+            userID[i][j] = c;
+        }
+        j = -1;
+        while (++j < 32)
+        {
+            char c;
+            read(fd, &c, 1);
+            if (c == '\n' || c == 0)
+            {
+                pwdID[i][j] = '\0';
+                break;
+            }
+            pwdID[i][j] = c;
+        }
     }
-
     close(fd);
 }
 
 int check_idpw()
 {
     char user[32];
-    // char pwd[32];
+    char pwd[32];
     int n;
+    int i, j = -1;
 
     // 입력받은 Username, Password와 list.txt 비교
     printf(1, "Username: ");
@@ -34,10 +56,21 @@ int check_idpw()
         printf(1, "read error\n");
         exit();
     }
-    user[n] = 0;
-    printf(1, "username : %s\n", user);
+    user[n - 1] = 0;
 
-	return 1;
+    printf(1, "Password: ");
+    if ((n = read(0, pwd, 32)) < 0)
+    {
+        printf(1, "read error\n");
+        exit();
+    }
+
+    while (!userID[++i])
+    {
+        if (!strcmp(user, userID[i]) && !strcmp(pwd, pwdID[i]))
+            return 1;
+    }
+    return 0;
 }
 
 int main(int argc, char *argv[])
