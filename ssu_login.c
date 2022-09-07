@@ -9,8 +9,8 @@ char pwdID[16][32];
 void get_user_list()
 {
     int fd;
-    char user[32];
-    char pwd[32];
+//    char user[32];
+//    char pwd[32];
 
     fd = open("list.txt", O_RDONLY);
 
@@ -24,7 +24,7 @@ void get_user_list()
 int check_idpw()
 {
     char user[32];
-    char pwd[32];
+    // char pwd[32];
     int n;
 
     // 입력받은 Username, Password와 list.txt 비교
@@ -36,6 +36,8 @@ int check_idpw()
     }
     user[n] = 0;
     printf(1, "username : %s\n", user);
+
+	return 1;
 }
 
 int main(int argc, char *argv[])
