@@ -47,7 +47,7 @@ int check_idpw()
     char user[32];
     char pwd[32];
     int n;
-    int i, j = -1;
+    int i = -1;
 
     // 입력받은 Username, Password와 list.txt 비교
     printf(1, "Username: ");
@@ -64,9 +64,11 @@ int check_idpw()
         printf(1, "read error\n");
         exit();
     }
+	pwd[n - 1] = 0;
 
     while (!userID[++i])
     {
+		printf(1, "check userID\n");
         if (!strcmp(user, userID[i]) && !strcmp(pwd, pwdID[i]))
             return 1;
     }
