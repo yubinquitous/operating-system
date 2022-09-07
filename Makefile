@@ -185,8 +185,8 @@ UPROGS=\
 	_hcat\
 	_ssu_login\
 
-fs.img: mkfs README $(UPROGS)
-	./mkfs fs.img README $(UPROGS)
+fs.img: mkfs README list.txt $(UPROGS)
+	./mkfs fs.img README list.txt $(UPROGS)
 
 -include *.d
 
@@ -254,7 +254,7 @@ EXTRA=\
 	mkfs.c ulib.c user.h cat.c echo.c forktest.c grep.c kill.c\
 	ln.c ls.c mkdir.c rm.c stressfs.c usertests.c wc.c zombie.c\
 	printf.c umalloc.c helloworld.c hcat.c ssu_login.c\
-	README dot-bochsrc *.pl toc.* runoff runoff1 runoff.list\
+	README dot-bochsrc *.pl toc.* runoff runoff1 runoff.list list.txt\
 	.gdbinit.tmpl gdbutil\
 
 dist:
