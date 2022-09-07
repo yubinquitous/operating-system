@@ -9,15 +9,15 @@ char pwdID[16][32];
 void get_user_list()
 {
     int fd;
+    int j = -1;
+    char c;
 
     fd = open("list.txt", O_RDONLY);
 
     for (int i = 0; i < 16; i++)
     {
-        int j = -1;
         while (++j < 32)
         {
-            char c;
             read(fd, &c, 1);
             if (c == ' ')
             {
@@ -29,7 +29,6 @@ void get_user_list()
         j = -1;
         while (++j < 32)
         {
-            char c;
             read(fd, &c, 1);
             if (c == '\n' || c == 0)
             {
@@ -38,6 +37,13 @@ void get_user_list()
             }
             pwdID[i][j] = c;
         }
+    }
+
+    // test
+    int i = -1;
+    while (!userID[++i])
+    {
+        printf(1, "%s %s\n", userID[i], pwdID[i]);
     }
     close(fd);
 }
@@ -64,11 +70,11 @@ int check_idpw()
         printf(1, "read error\n");
         exit();
     }
-	pwd[n - 1] = 0;
+    pwd[n - 1] = 0;
 
     while (!userID[++i])
     {
-		printf(1, "check userID\n");
+        printf(1, "check userID\n");
         if (!strcmp(user, userID[i]) && !strcmp(pwd, pwdID[i]))
             return 1;
     }
