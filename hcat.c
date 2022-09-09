@@ -11,7 +11,7 @@ void hcat(int fd)
   int i = 0;
   int cnt = 0;
 
-  while (n = read(fd, buf, sizeof(buf)) > 0)
+  while ((cnt < nlines) && ((n = read(fd, buf, sizeof(buf))) > 0))
   {
     for (i = 0; i < n; i++)
     {
@@ -19,10 +19,11 @@ void hcat(int fd)
       {
         ++cnt;
         if (cnt == nlines)
-          break;
+			break;
       }
     }
-    if (write(1, buf, i) != 1)
+	++i;
+    if (write(1, buf, i) != i)
     {
       printf(1, "hcat: write error\n");
       exit();
