@@ -2,19 +2,27 @@
 #include "stat.h"
 #include "user.h"
 
-char c;
+char buf[512];
 int nlines;
 
 void hcat(int fd)
 {
   int n = 0;
+  int i = 0;
   int cnt = 0;
 
-  while ((cnt < nlines) && ((n = read(fd, &c, 1)) > 0))
+  while (n = read(fd, buf, sizeof(buf)) > 0)
   {
-    if (c == '\n')
-      ++cnt;
-    if (write(1, &c, 1) != 1)
+    for (i = 0; i < n; i++)
+    {
+      if (buf[i] == '\n')
+      {
+        ++cnt;
+        if (cnt == nlines)
+          break;
+      }
+    }
+    if (write(1, buf, i) != 1)
     {
       printf(1, "hcat: write error\n");
       exit();
