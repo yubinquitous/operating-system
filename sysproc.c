@@ -92,7 +92,7 @@ int sys_memsize(void)
   // 기능 구현
   p = myproc();
   size = p->sz;
-  printf(1, "size: %d\n", size);
+  // printf(1, "size: %d\n", size);
 
   return size;
 }
