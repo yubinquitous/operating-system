@@ -1,4 +1,5 @@
 #define SIZE 2048
+#include "user.h"
 
 int main(void)
 {
@@ -9,12 +10,12 @@ int main(void)
 
     printf(1, "Allocating more momory\n");
     msize = memsize();
-    print(1, "The process is using %dB\n", msize);
+    printf(1, "The process is using %dB\n", msize);
 
     free(tmp);
-    print(1, "Freeing memory\n");
+    printf(1, "Freeing memory\n");
     msize = memsize();
-    print(1, "The process is using %dB\n", msize);
+    printf(1, "The process is using %dB\n", msize);
 
     exit();
 }
