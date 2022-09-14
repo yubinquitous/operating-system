@@ -128,7 +128,7 @@ static int (*syscalls[])(void) = {
     [SYS_trace] sys_trace,
 };
 
-static char (*syscallnames[])(void) = {
+static char (*syscallnames[]) = {
     [SYS_fork] "fork",
     [SYS_exit] "exit",
     [SYS_wait] "wait",
@@ -165,7 +165,7 @@ void syscall(void)
     curproc->tf->eax = syscalls[num]();
     if (curproc->trace_mask >> num)
     {
-      printf("syscall traced: pid : %d, syscall : %s, %d returned",
+      cprintf("syscall traced: pid : %d, syscall : %s, %d returned",
              curproc->pid, syscallnames[num], sys_trace());
     }
   }

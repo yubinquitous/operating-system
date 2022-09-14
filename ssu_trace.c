@@ -3,9 +3,8 @@
 int main(int argc, char *argv[])
 {
     int pid, wpid;
-    int status;
 
-    if (argc != 2 && argc != 3)
+    if (argc < 2)
     {
         printf(2, "Usage: %s <mask> <command>\n", argv[0]);
         exit();
@@ -28,7 +27,7 @@ int main(int argc, char *argv[])
         }
         if (pid == 0)
         {
-            exec(argv[2], argv[2]);
+            exec(argv[2], argv + 2);
             printf(1, "init: exec sh failed\n");
             exit();
         }
