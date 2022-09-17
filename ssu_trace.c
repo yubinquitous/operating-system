@@ -2,7 +2,7 @@
 
 int main(int argc, char *argv[])
 {
-    // int pid, wpid;
+	int pid, wpid;
     int mask;
 
     if (argc < 2)
@@ -17,4 +17,20 @@ int main(int argc, char *argv[])
         exit();
     }
     trace(mask);
+
+	pid = fork();
+	if (pid < 0)
+	{
+		printf(2, "init: fork failed\n");
+		exit();
+	}
+	if (pid == 0)
+	{
+		exec(argv[2], argv + 2);
+		printf(2, "init: exec sh failed\n");
+		exit();
+	}
+	while ((wpid = wait()) >= 0 && wpid != pid)
+		printf(2, "zombie!\n");
+	exit();
 }

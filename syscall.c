@@ -163,10 +163,8 @@ void syscall(void)
   if (num > 0 && num < NELEM(syscalls) && syscalls[num])
   {
     curproc->tf->eax = syscalls[num]();
-    if (num == SYS_trace && curproc->trace_mask >> num)
-    {
-      cprintf("syscall traced: pid : %d, syscall : %s, %d returned",
-              curproc->pid, syscallnames[num], sys_trace());
+	if((curproc->trace_mask>>num)&1){
+      cprintf("syscall traced: pid = %d, syscall = %s, %d returned\n",curproc->pid,syscallnames[num],curproc->tf->eax);
     }
   }
   else
