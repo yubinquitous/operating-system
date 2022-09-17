@@ -2,7 +2,8 @@
 
 int main(int argc, char *argv[])
 {
-    int pid, wpid;
+    // int pid, wpid;
+    int mask;
 
     if (argc < 2)
     {
@@ -10,29 +11,10 @@ int main(int argc, char *argv[])
         exit();
     }
 
-    if (argc == 2)
+    if ((mask = atoi(argv[1])) < 0 || mask > 0x7FFFFFFF)
     {
-        trace(atoi(argv[1]));
+        printf(2, "Invalid mask\n");
         exit();
     }
-    else if (argc == 3)
-    {
-        trace(atoi(argv[1]));
-
-        pid = fork();
-        if (pid < 0)
-        {
-            printf(1, "init: fork failed\n");
-            exit();
-        }
-        if (pid == 0)
-        {
-            exec(argv[2], argv + 2);
-            printf(1, "init: exec sh failed\n");
-            exit();
-        }
-        while ((wpid = wait()) >= 0 && wpid != pid)
-            printf(1, "zombie!\n");
-    }
-    exit();
+    trace(mask);
 }
