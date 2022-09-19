@@ -89,10 +89,8 @@ int sys_memsize(void)
   uint size;
   struct proc *p;
 
-  // 기능 구현
   p = myproc();
   size = p->sz;
-  // printf(1, "size: %d\n", size);
 
   return size;
 }
@@ -104,7 +102,6 @@ int sys_trace(void)
   if (argint(0, &mask) < 0)
     return -1;
 
-  // 기능 구현
   myproc()->trace_mask = mask;
   return mask;
 }
