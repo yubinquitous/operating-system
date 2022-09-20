@@ -5,7 +5,7 @@ int main(int argc, char *argv[])
 	int pid, wpid;
 	int mask;
 
-	if (argc < 2)
+	if (argc < 3)
 	{
 		printf(2, "Usage: %s <mask> <command>\n", argv[0]);
 		exit();
