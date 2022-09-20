@@ -114,6 +114,7 @@ found:
   p->context = (struct context *)sp;
   memset(p->context, 0, sizeof *p->context);
   p->context->eip = (uint)forkret;
+  p->trace_mask = 0;
 
   return p;
 }
