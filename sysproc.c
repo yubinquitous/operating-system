@@ -99,9 +99,11 @@ int sys_trace(void)
 {
   int mask;
 
+  // 인자를 받아서 mask에 저장
   if (argint(0, &mask) < 0)
     return -1;
 
+  // trace_mask 값에 mask 저장
   myproc()->trace_mask = mask;
   return mask;
 }
