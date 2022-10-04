@@ -7,17 +7,10 @@
 #include "proc.h"
 #include "spinlock.h"
 
-#define TIME_SLICE 10000000
-#define NULL ((void *)0)
-
-int weight = 1;
-
 struct
 {
     struct spinlock lock;
     struct proc proc[NPROC];
-    // task1
-    int min_priority;
 } ptable;
 
 static struct proc *initproc;
@@ -27,41 +20,6 @@ extern void forkret(void);
 extern void trapret(void);
 
 static void wakeup1(void *chan);
-
-struct proc *ssu_schedule()
-{
-    struct proc *p;
-    struct proc *ret = NULL;
-
-    // task2
-    for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
-    {
-        if (p->state != RUNNABLE)
-            continue;
-        if (ret == NULL)
-            ret = p;
-        else if (ret->pid < p->pid)
-            ret = p;
-    }
-#ifdef DEBUG
-// 3
-#endif
-    return ret;
-}
-
-void update_priority(struct proc *proc)
-{
-    // task 4
-}
-
-void update_min_priority()
-{
-    struct proc *min = NULL;
-    struct proc *p;
-    // task 5
-    if (min != NULL)
-        ptable.min_priority = min->priority;
-}
 
 void pinit(void)
 {

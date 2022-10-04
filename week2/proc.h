@@ -61,7 +61,6 @@ struct proc
     struct inode *cwd;          // Current directory
     char name[16];              // Process name (debugging)
     int trace_mask;             // Trace mask to control tracing
-    int priority;               // Priority of the process
 };
 
 // Process memory is laid out contiguously, low addresses first:
