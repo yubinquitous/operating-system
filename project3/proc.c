@@ -7,10 +7,17 @@
 #include "proc.h"
 #include "spinlock.h"
 
+#define TIME_SLICE 10000000
+#define NULL ((void *)0)
+
+int weight = 1;
+
 struct
 {
 	struct spinlock lock;
 	struct proc proc[NPROC];
+	// task 1
+	int min_priority;
 } ptable;
 
 static struct proc *initproc;
@@ -20,6 +27,42 @@ extern void forkret(void);
 extern void trapret(void);
 
 static void wakeup1(void *chan);
+
+struct proc *ssu_schedule()
+{
+	struct proc *p;
+	struct proc *ret = NULL;
+
+	// task 2
+
+#ifdef DEBUG
+	// task 3
+
+#endif
+
+	return ret;
+}
+
+void update_priority(struct proc *proc)
+{
+	// task 4
+}
+
+void update_min_priority()
+{
+	struct proc *min = NULL;
+	struct proc *p;
+
+	// task 5
+
+	if (min != NULL)
+		ptable.min_priority = min->priority;
+}
+
+void assign_min_priority(struct proc *proc)
+{
+	// task 6
+}
 
 void pinit(void)
 {
@@ -88,8 +131,12 @@ allocproc(void)
 	return 0;
 
 found:
+	// task 7
+
 	p->state = EMBRYO;
 	p->pid = nextpid++;
+
+	assign_min_priority(p);
 
 	release(&ptable.lock);
 
@@ -343,25 +390,28 @@ void scheduler(void)
 
 		// Loop over process table looking for process to run.
 		acquire(&ptable.lock);
-		for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+
+		p = ssu_schedule();
+		if (p == NULL)
 		{
-			if (p->state != RUNNABLE)
-				continue;
-
-			// Switch to chosen process.  It is the process's job
-			// to release ptable.lock and then reacquire it
-			// before jumping back to us.
-			c->proc = p;
-			switchuvm(p);
-			p->state = RUNNING;
-
-			swtch(&(c->scheduler), p->context);
-			switchkvm();
-
-			// Process is done running for now.
-			// It should have changed its p->state before coming back.
-			c->proc = 0;
+			release(&ptable.lock);
+			continue;
 		}
+
+		// Switch to chosen process.  It is the process's job
+		// to release ptable.lock and then reacquire it
+		// before jumping back to us.
+		c->proc = p;
+		switchuvm(p);
+		p->state = RUNNING;
+
+		swtch(&(c->scheduler), p->context);
+		switchkvm();
+
+		// task 8
+		// Process is done running for now.
+		// It should have changed its p->state before coming back.
+		c->proc = 0;
 		release(&ptable.lock);
 	}
 }
@@ -469,9 +519,16 @@ wakeup1(void *chan)
 {
 	struct proc *p;
 
-	for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
-		if (p->state == SLEEPING && p->chan == chan)
-			p->state = RUNNABLE;
+	/* 원래 코드
+		for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+			if (p->state == SLEEPING && p->chan == chan)
+				p->state = RUNNABLE;
+	*/
+
+	// task 9
+	/* ... */
+	assign_min_priority(p);
+	/* ... */
 }
 
 // Wake up all processes sleeping on chan.
@@ -541,4 +598,12 @@ void procdump(void)
 		}
 		cprintf("\n");
 	}
+}
+
+void do_weightset(int weight)
+{
+	acquire(&ptable.lock);
+	// task 10
+
+	release(&ptable.lock);
 }
