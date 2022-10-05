@@ -17,14 +17,15 @@ void sdebug_func(void)
 		pid = fork();
 		if (pid == 0) // 자식 프로세스
 		{
-			int start_time = uptime();							   // 프로세스 시작 시간
+			int start_time = uptime(); // 프로세스 시작 시간
+			weightset(n + 1);
 			for (uint j = 0; j < TOTAL_COUNTER; j++) // counter 값만큼 수행
 			{
 				if (j != 0 && j % PRINT_CYCLE == 0) // PRINT_CYCLE 마다 출력
 				{
 					// struct proc *p = myproc();
 					int time = (uptime() - start_time) * 10; // 프로세스 정보 출력 시간 - 프로세스 시작 시간
-					printf(1, "PID: %d, WEIGHT: %d, TIMES: %d ms\n", getpid(), n+1, time);
+					printf(1, "PID: %d, WEIGHT: %d, TIMES: %d ms\n", getpid(), n + 1, time);
 				}
 			}
 			exit();
