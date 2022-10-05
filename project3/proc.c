@@ -17,7 +17,7 @@ struct
 	struct spinlock lock;
 	struct proc proc[NPROC];
 	// task 1
-	int min_priority;
+	long min_priority; // 가장 작은 priority 값은 struct ptable 멤버로 관리
 } ptable;
 
 static struct proc *initproc;
@@ -34,10 +34,19 @@ struct proc *ssu_schedule()
 	struct proc *ret = NULL;
 
 	// task 2
+	for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+	{
+		if (p->state != RUNNABLE)
+			continue;
+
+		if (ret == NULL || p->priority < ret->priority || (p->priority == ret->priority && p->weight < ret->weight))
+			ret = p;
+	}
 
 #ifdef DEBUG
 	// task 3
-
+	if (ret)
+		cprintf("PID: %d, NAME: %s, WEIGHT: %d, PRIORITY: %d\n", ret->pid, ret->name, ret->weight, ret->priority);
 #endif
 
 	return ret;
@@ -46,6 +55,7 @@ struct proc *ssu_schedule()
 void update_priority(struct proc *proc)
 {
 	// task 4
+	proc->priority = proc->priority + (TIME_SLICE / proc->weight);
 }
 
 void update_min_priority()
@@ -54,14 +64,23 @@ void update_min_priority()
 	struct proc *p;
 
 	// task 5
+	for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+	{
+		if (p->state != RUNNABLE)
+			continue;
+
+		if (min == NULL || p->priority < min->priority)
+			min = p;
+	}
 
 	if (min != NULL)
 		ptable.min_priority = min->priority;
 }
 
+// 관리하고 있는 프로세스의 min_priority를 인자로 들어오는 Process의 priority로 지정하는 함수
 void assign_min_priority(struct proc *proc)
 {
-	// task 6
+	proc->priority = ptable.min_priority;
 }
 
 void pinit(void)
@@ -132,11 +151,11 @@ allocproc(void)
 
 found:
 	// task 7
-
+	p->weight = weight++; // weight 값은 프로세스 생성 순서에 따라 1부터 차례대로 증가시키며 부여함
 	p->state = EMBRYO;
 	p->pid = nextpid++;
 
-	assign_min_priority(p);
+	assign_min_priority(p); // 새로 생성된 프로세스의 priority는 ptable의 min_priority로 지정함
 
 	release(&ptable.lock);
 
@@ -409,6 +428,7 @@ void scheduler(void)
 		switchkvm();
 
 		// task 8
+		update_priority(p); // 왠지 여긴거같음
 		// Process is done running for now.
 		// It should have changed its p->state before coming back.
 		c->proc = 0;
@@ -526,9 +546,14 @@ wakeup1(void *chan)
 	*/
 
 	// task 9
-	/* ... */
-	assign_min_priority(p);
-	/* ... */
+	for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+	{
+		if (p->state == SLEEPING && p->chan == chan)
+		{
+			p->state = RUNNABLE;
+			assign_min_priority(p);
+		}
+	}
 }
 
 // Wake up all processes sleeping on chan.
@@ -604,6 +629,7 @@ void do_weightset(int weight)
 {
 	acquire(&ptable.lock);
 	// task 10
+	myproc()->weight = weight;
 
 	release(&ptable.lock);
 }
