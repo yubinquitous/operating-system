@@ -26,7 +26,10 @@ int nextpid = 1;
 extern void forkret(void);
 extern void trapret(void);
 
+extern void do_weightset(int);
+
 static void wakeup1(void *chan);
+void update_priority(struct proc *proc);
 
 struct proc *ssu_schedule()
 {
@@ -39,14 +42,17 @@ struct proc *ssu_schedule()
 		if (p->state != RUNNABLE)
 			continue;
 
+		update_priority(p);
 		if (ret == NULL || p->priority < ret->priority || (p->priority == ret->priority && p->weight < ret->weight))
 			ret = p;
 	}
 
 #ifdef DEBUG
 	// task 3
+	acquire(&ptable.lock);
 	if (ret)
 		cprintf("PID: %d, NAME: %s, WEIGHT: %d, PRIORITY: %d\n", ret->pid, ret->name, ret->weight, ret->priority);
+	release(&ptable.lock);
 #endif
 
 	return ret;

@@ -9,6 +9,7 @@
 void sdebug_func(void)
 {
 	int n, pid;
+	int waitpid;
 
 	printf(1, "start sdebug command\n");
 
@@ -33,20 +34,20 @@ void sdebug_func(void)
 			break;
 	}
 
-	if (n == PNUM)
-	{
-		printf(1, "fork claimed to work %d times!\n", PNUM);
-		exit();
-	}
+	// if (n == PNUM)
+	// {
+	//	printf(1, "fork claimed to work %d times!\n", PNUM);
+	// 	exit();
+	// }
 
 	for (; n > 0; n--)
 	{
-		if (wait() < 0)
+		if ((waitpid = wait()) < 0)
 		{
 			printf(1, "wait stopped early\n");
 			exit();
 		}
-		printf(1, "PID: %d terminated\n", n);
+		printf(1, "PID: %d terminated\n", waitpid);
 	}
 
 	if (wait() != -1)
@@ -63,3 +64,4 @@ int main(void)
 	sdebug_func();
 	exit();
 }
+
