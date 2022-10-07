@@ -23,7 +23,6 @@ void sdebug_func(void)
 			{
 				if (j != 0 && j % PRINT_CYCLE == 0) // PRINT_CYCLE 마다 출력
 				{
-					// struct proc *p = myproc();
 					int time = (uptime() - start_time) * 10; // 프로세스 정보 출력 시간 - 프로세스 시작 시간
 					printf(1, "PID: %d, WEIGHT: %d, TIMES: %d ms\n", getpid(), n + 1, time);
 				}
