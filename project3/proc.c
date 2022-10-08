@@ -10,14 +10,13 @@
 #define TIME_SLICE 10000000
 #define NULL ((void *)0)
 
-int weight = 1;
+int weight = 1; // weight 값은 프로세스 생성 순서에 따라 1부터 차례대로 증가시킨다.
 
 struct
 {
 	struct spinlock lock;
 	struct proc proc[NPROC];
-	// task 1
-	long min_priority; // 가장 작은 priority 값은 struct ptable 멤버로 관리
+	long min_priority; // 가장 작은 priority 값은 struct ptable 멤버로 관리한다.
 } ptable;
 
 static struct proc *initproc;
@@ -25,8 +24,6 @@ static struct proc *initproc;
 int nextpid = 1;
 extern void forkret(void);
 extern void trapret(void);
-
-extern void do_weightset(int);
 
 static void wakeup1(void *chan);
 void update_priority(struct proc *proc);
@@ -58,32 +55,38 @@ struct proc *ssu_schedule()
 	return ret;
 }
 
+/**
+ * 프로세스의 priority 값을 업데이트한다.
+ */
 void update_priority(struct proc *proc)
 {
-	// task 4
 	proc->priority = proc->priority + (TIME_SLICE / proc->weight);
 }
 
+/**
+ * 실행 가능한 프로세스 중 가장 높은 우선순위를 ptable의 min_priority에 저장한다.
+ */
 void update_min_priority()
 {
-	struct proc *min = NULL;
+	int min_priority = -1; // 프로세스의 priority로 사용되지 않는 값으로 초기화
 	struct proc *p;
 
-	// task 5
-	for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+	for (p = ptable.proc; p < &ptable.proc[NPROC]; p++) // ptable의 모든 프로세스를 순회
 	{
-		if (p->state != RUNNABLE)
+		if (p->state != RUNNABLE) // runnable 상태인 프로세스만 고려
 			continue;
 
-		if (min == NULL || p->priority < min->priority)
-			min = p;
+		if (min_priority == -1 || p->priority < min_priority) // 현재 순회중인 프로세스의 priority 값이 저장된 min_priority보다 작으면 min_priority를 업데이트
+			min_priority = p->priority;
 	}
 
-	if (min != NULL)
-		ptable.min_priority = min->priority;
+	if (min_priority != -1) // min_priority에 초기값이 아닌 값이 저장되어 있다면 ptable의 min_priority에 저장
+		ptable.min_priority = min_priority;
 }
 
-// 관리하고 있는 프로세스의 min_priority를 인자로 들어오는 Process의 priority로 지정하는 함수
+/**
+ * 관리하고 있는 프로세스의 min_priority를 인자로 들어오는 프로세스의 priority로 지정한다.
+ */
 void assign_min_priority(struct proc *proc)
 {
 	proc->priority = ptable.min_priority;
@@ -156,12 +159,11 @@ allocproc(void)
 	return 0;
 
 found:
-	// task 7
-	p->weight = weight++; // weight 값은 프로세스 생성 순서에 따라 1부터 차례대로 증가시키며 부여함
+	p->weight = weight++; // weight 값은 프로세스 생성 순서에 따라 1부터 차례대로 증가시키며 부여한다.
 	p->state = EMBRYO;
 	p->pid = nextpid++;
 
-	assign_min_priority(p); // 새로 생성된 프로세스의 priority는 ptable의 min_priority로 지정함
+	assign_min_priority(p); // 새로 생성된 프로세스의 priority는 ptable의 min_priority로 지정한다.
 
 	release(&ptable.lock);
 
@@ -416,7 +418,7 @@ void scheduler(void)
 		// Loop over process table looking for process to run.
 		acquire(&ptable.lock);
 
-		p = ssu_schedule();
+		p = ssu_schedule(); // ssu_schedule()을 통해 우선순위가 가장 높은 프로세스를 찾아낸다.
 		if (p == NULL)
 		{
 			release(&ptable.lock);
