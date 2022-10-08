@@ -33,7 +33,6 @@ struct proc *ssu_schedule()
 	struct proc *p;
 	struct proc *ret = NULL;
 
-	// task 2
 	for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
 	{
 		if (p->state != RUNNABLE)
@@ -45,7 +44,6 @@ struct proc *ssu_schedule()
 	}
 
 #ifdef DEBUG
-	// task 3
 	acquire(&ptable.lock);
 	if (ret)
 		cprintf("PID: %d, NAME: %s, WEIGHT: %d, PRIORITY: %d\n", ret->pid, ret->name, ret->weight, ret->priority);
