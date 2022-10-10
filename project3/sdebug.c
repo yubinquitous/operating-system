@@ -1,6 +1,6 @@
-#define PNUM 5					// Process 개수
-#define PRINT_CYCLE 10000000	// Process가 정보를 출력하는 주기
-#define TOTAL_COUNTER 500000000 // Process가 종료할 때 counter 값
+#define PNUM 5				   // Process 개수
+#define PRINT_CYCLE 10000000   // Process가 정보를 출력하는 주기
+#define TOTAL_COUNTER 50000000 // Process가 종료할 때 counter 값
 
 #include "user.h"
 #include "types.h"

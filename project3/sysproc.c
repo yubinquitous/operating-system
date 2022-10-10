@@ -7,8 +7,6 @@
 #include "mmu.h"
 #include "proc.h"
 
-extern void do_weightset(int);
-
 int sys_fork(void)
 {
 	return fork();

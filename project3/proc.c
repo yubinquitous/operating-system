@@ -16,7 +16,7 @@ struct
 {
 	struct spinlock lock;
 	struct proc proc[NPROC];
-	long min_priority; // 가장 작은 priority 값은 struct ptable 멤버로 관리한다.
+	long long min_priority; // 가장 작은 priority 값은 struct ptable 멤버로 관리한다.
 } ptable;
 
 static struct proc *initproc;
@@ -27,29 +27,29 @@ extern void trapret(void);
 
 static void wakeup1(void *chan);
 void update_priority(struct proc *proc);
+void update_min_priority(void);
 
 struct proc *ssu_schedule()
 {
 	struct proc *p;
 	struct proc *ret = NULL;
 
+	// task 2
 	for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
 	{
 		if (p->state != RUNNABLE)
 			continue;
 
-		update_priority(p);
 		if (ret == NULL || p->priority < ret->priority || (p->priority == ret->priority && p->weight < ret->weight))
 			ret = p;
 	}
 
 #ifdef DEBUG
-	acquire(&ptable.lock);
+	// task 3
+	// cprintf("DEBUG=1\n");//test
 	if (ret)
 		cprintf("PID: %d, NAME: %s, WEIGHT: %d, PRIORITY: %d\n", ret->pid, ret->name, ret->weight, ret->priority);
-	release(&ptable.lock);
 #endif
-
 	return ret;
 }
 
@@ -71,7 +71,7 @@ void update_min_priority()
 
 	for (p = ptable.proc; p < &ptable.proc[NPROC]; p++) // ptable의 모든 프로세스를 순회
 	{
-		if (p->state != RUNNABLE) // runnable 상태인 프로세스만 고려
+		if (p->state != RUNNABLE && p->state != RUNNING) // runnable 상태인 프로세스만 고려
 			continue;
 
 		if (min_priority == -1 || p->priority < min_priority) // 현재 순회중인 프로세스의 priority 값이 저장된 min_priority보다 작으면 min_priority를 업데이트
@@ -196,6 +196,8 @@ void userinit(void)
 {
 	struct proc *p;
 	extern char _binary_initcode_start[], _binary_initcode_size[];
+
+	ptable.min_priority = 3; // init process가 처음 생기는 시점에서 최소 priority 값을 3으로 지정
 
 	p = allocproc();
 
@@ -434,7 +436,9 @@ void scheduler(void)
 		switchkvm();
 
 		// task 8
-		update_priority(p); // 왠지 여긴거같음
+		//여기엔 뭘 써야하지 ? ?
+		update_priority(p);
+		update_min_priority();
 		// Process is done running for now.
 		// It should have changed its p->state before coming back.
 		c->proc = 0;
@@ -639,3 +643,4 @@ void do_weightset(int weight)
 
 	release(&ptable.lock);
 }
+
