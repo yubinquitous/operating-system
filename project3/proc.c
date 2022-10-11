@@ -26,8 +26,6 @@ extern void forkret(void);
 extern void trapret(void);
 
 static void wakeup1(void *chan);
-void update_priority(struct proc *proc);
-void update_min_priority(void);
 
 struct proc *ssu_schedule()
 {
@@ -45,11 +43,12 @@ struct proc *ssu_schedule()
 	}
 
 #ifdef DEBUG
-	// task 3
-	// cprintf("DEBUG=1\n");//test
-	if (ret)
+	if (ret != NULL)
+	{
 		cprintf("PID: %d, NAME: %s, WEIGHT: %d, PRIORITY: %d\n", ret->pid, ret->name, ret->weight, ret->priority);
+	}	
 #endif
+
 	return ret;
 }
 
@@ -74,11 +73,12 @@ void update_min_priority()
 		if (p->state != RUNNABLE) // runnable 상태인 프로세스만 고려
 			continue;
 
-		if (min == NULL || p->priority < min->priority) // 현재 순회중인 프로세스의 priority 값이 저장된 min_priority보다 작으면 min_priority를 업데이트
+		if (min == NULL || p->priority < min->priority) // 현재 순회중인 프로세스의 priority 값이 min의 priority보다 작으면 min을 업데이트
 			min = p;
 	}
 
-	if (min != NULL) // min_priority에 초기값이 아닌 값이 저장되어 있다면 ptable의 min_priority에 저장
+	if (min != NULL) // min_priority를 업데이트할 수 있는 상황이라면
+		// min의 priority를 ptable의 min_priority로 저장
 		ptable.min_priority = min->priority;
 }
 
@@ -438,6 +438,7 @@ void scheduler(void)
 		// task 8
 		update_priority(p);
 		update_min_priority();
+
 		// Process is done running for now.
 		// It should have changed its p->state before coming back.
 		c->proc = 0;
