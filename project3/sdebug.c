@@ -1,6 +1,6 @@
-#define PNUM 5				   // Process 개수
-#define PRINT_CYCLE 10000000   // Process가 정보를 출력하는 주기
-#define TOTAL_COUNTER 50000000 // Process가 종료할 때 counter 값
+#define PNUM 5					// Process 개수
+#define PRINT_CYCLE 10000000	// Process가 정보를 출력하는 주기
+#define TOTAL_COUNTER 500000000 // Process가 종료할 때 counter 값
 
 #include "user.h"
 #include "types.h"
@@ -18,14 +18,14 @@ void sdebug_func(void)
 		pid = fork();
 		if (pid == 0) // 자식 프로세스
 		{
-			int start_time = uptime(); // 프로세스 시작 시간
+			int start_tick = uptime(); // 프로세스 시작 시간
 			weightset(n + 1);
 			for (uint j = 0; j < TOTAL_COUNTER; j++) // counter 값만큼 수행
 			{
-				if (j != 0 && j % PRINT_CYCLE == 0) // PRINT_CYCLE 마다 출력
+				if (j == PRINT_CYCLE) // 프로세스 정보를 주기에 맞게 한번만 출력
 				{
-					int time = (uptime() - start_time) * 10; // 프로세스 정보 출력 시간 - 프로세스 시작 시간
-					printf(1, "PID: %d, WEIGHT: %d, TIMES: %d ms\n", getpid(), n + 1, time);
+					int tick = (uptime() - start_tick) * 10; // 프로세스 시작 후 출력까지 걸린 시간
+					printf(1, "PID: %d, WEIGHT: %d, TIMES: %d ms\n", getpid(), n + 1, tick);
 				}
 			}
 			exit();
@@ -64,4 +64,3 @@ int main(void)
 	sdebug_func();
 	exit();
 }
-

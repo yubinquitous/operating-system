@@ -40,7 +40,7 @@ struct proc *ssu_schedule()
 		if (p->state != RUNNABLE)
 			continue;
 
-		if (ret == NULL || p->priority < ret->priority || (p->priority == ret->priority && p->weight < ret->weight))
+		if (ret == NULL || p->priority < ret->priority)
 			ret = p;
 	}
 
@@ -71,7 +71,7 @@ void update_min_priority()
 
 	for (p = ptable.proc; p < &ptable.proc[NPROC]; p++) // ptable의 모든 프로세스를 순회
 	{
-		if (p->state != RUNNABLE && p->state != RUNNING) // runnable 상태인 프로세스만 고려
+		if (p->state != RUNNABLE) // runnable 상태인 프로세스만 고려
 			continue;
 
 		if (min_priority == -1 || p->priority < min_priority) // 현재 순회중인 프로세스의 priority 값이 저장된 min_priority보다 작으면 min_priority를 업데이트
@@ -436,7 +436,6 @@ void scheduler(void)
 		switchkvm();
 
 		// task 8
-		//여기엔 뭘 써야하지 ? ?
 		update_priority(p);
 		update_min_priority();
 		// Process is done running for now.
@@ -643,4 +642,3 @@ void do_weightset(int weight)
 
 	release(&ptable.lock);
 }
-
