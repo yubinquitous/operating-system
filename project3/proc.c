@@ -16,7 +16,7 @@ struct
 {
 	struct spinlock lock;
 	struct proc proc[NPROC];
-	long min_priority; // 가장 작은 priority 값은 struct ptable 멤버로 관리한다.
+	long long min_priority; // 가장 작은 priority 값은 struct ptable 멤버로 관리한다.
 } ptable;
 
 static struct proc *initproc;

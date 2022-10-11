@@ -20,7 +20,7 @@ void sdebug_func(void)
 		{
 			int start_tick = uptime(); // 프로세스 시작 시간
 			weightset(n + 1);
-			for (uint j = 0; j < TOTAL_COUNTER; j++) // counter 값만큼 수행
+			for (long long j = 0; j < TOTAL_COUNTER; j++) // counter 값만큼 수행
 			{
 				if (j == PRINT_CYCLE) // 프로세스 정보를 주기에 맞게 한번만 출력
 				{
