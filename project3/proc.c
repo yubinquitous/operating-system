@@ -16,7 +16,7 @@ struct
 {
 	struct spinlock lock;
 	struct proc proc[NPROC];
-	long long min_priority; // 가장 작은 priority 값은 struct ptable 멤버로 관리한다.
+	long min_priority; // 가장 작은 priority 값은 struct ptable 멤버로 관리한다.
 } ptable;
 
 static struct proc *initproc;
@@ -66,7 +66,7 @@ void update_priority(struct proc *proc)
  */
 void update_min_priority()
 {
-	int min_priority = -1; // 프로세스의 priority로 사용되지 않는 값으로 초기화
+	struct proc *min = NULL; // 프로세스의 priority로 사용되지 않는 값으로 초기화
 	struct proc *p;
 
 	for (p = ptable.proc; p < &ptable.proc[NPROC]; p++) // ptable의 모든 프로세스를 순회
@@ -74,12 +74,12 @@ void update_min_priority()
 		if (p->state != RUNNABLE) // runnable 상태인 프로세스만 고려
 			continue;
 
-		if (min_priority == -1 || p->priority < min_priority) // 현재 순회중인 프로세스의 priority 값이 저장된 min_priority보다 작으면 min_priority를 업데이트
-			min_priority = p->priority;
+		if (min == NULL || p->priority < min->priority) // 현재 순회중인 프로세스의 priority 값이 저장된 min_priority보다 작으면 min_priority를 업데이트
+			min = p;
 	}
 
-	if (min_priority != -1) // min_priority에 초기값이 아닌 값이 저장되어 있다면 ptable의 min_priority에 저장
-		ptable.min_priority = min_priority;
+	if (min != NULL) // min_priority에 초기값이 아닌 값이 저장되어 있다면 ptable의 min_priority에 저장
+		ptable.min_priority = min->priority;
 }
 
 /**
@@ -642,3 +642,4 @@ void do_weightset(int weight)
 
 	release(&ptable.lock);
 }
+

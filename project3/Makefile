@@ -89,6 +89,7 @@ endif
 ifneq ($(shell $(CC) -dumpspecs 2>/dev/null | grep -e '[^f]nopie'),)
 CFLAGS += -fno-pie -nopie
 endif
+
 ifeq ($(debug), 1)
 CFLAGS += -DDEBUG
 endif
