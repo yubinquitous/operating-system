@@ -32,18 +32,18 @@ struct proc *ssu_schedule()
 	struct proc *p;
 	struct proc *ret = NULL;
 
-	// task 2
+	// ptable에 있는 모든 프로세스 순회
 	for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
 	{
-		if (p->state != RUNNABLE)
+		if (p->state != RUNNABLE) // RUNNABLE한 프로세스만 순회
 			continue;
 
-		if (ret == NULL || p->priority < ret->priority)
+		if (!ret|| p->priority < ret->priority) // ret->priority보다 p->priority가 작다면ret 갱신
 			ret = p;
 	}
 
-#ifdef DEBUG
-	if (ret != NULL)
+#ifdef DEBUG // 컴파일 시 debug 옵션을 줬다면
+	if (ret) // 새로 실행시킬 프로세스가 있다면
 	{
 		cprintf("PID: %d, NAME: %s, WEIGHT: %d, PRIORITY: %d\n", ret->pid, ret->name, ret->weight, ret->priority);
 	}	
@@ -73,11 +73,11 @@ void update_min_priority()
 		if (p->state != RUNNABLE) // runnable 상태인 프로세스만 고려
 			continue;
 
-		if (min == NULL || p->priority < min->priority) // 현재 순회중인 프로세스의 priority 값이 min의 priority보다 작으면 min을 업데이트
+		if (!min || p->priority < min->priority) // 현재 순회중인 프로세스의 priority 값이 min의 priority보다 작으면 min을 업데이트
 			min = p;
 	}
 
-	if (min != NULL) // min_priority를 업데이트할 수 있는 상황이라면
+	if (min) // min_priority를 업데이트할 수 있는 상황이라면
 		// min의 priority를 ptable의 min_priority로 저장
 		ptable.min_priority = min->priority;
 }
@@ -419,7 +419,7 @@ void scheduler(void)
 		acquire(&ptable.lock);
 
 		p = ssu_schedule(); // ssu_schedule()을 통해 우선순위가 가장 높은 프로세스를 찾아낸다.
-		if (p == NULL)
+		if (!p)
 		{
 			release(&ptable.lock);
 			continue;
@@ -435,9 +435,8 @@ void scheduler(void)
 		swtch(&(c->scheduler), p->context);
 		switchkvm();
 
-		// task 8
-		update_priority(p);
-		update_min_priority();
+		update_priority(p);	// 실행한 프로세스의 priority를 갱신
+		update_min_priority(); // ptable의 min_priority를 갱신
 
 		// Process is done running for now.
 		// It should have changed its p->state before coming back.
@@ -549,19 +548,12 @@ wakeup1(void *chan)
 {
 	struct proc *p;
 
-	/* 원래 코드
-		for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
-			if (p->state == SLEEPING && p->chan == chan)
-				p->state = RUNNABLE;
-	*/
-
-	// task 9
-	for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+	for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)	// ptable의 모든 프로세스 순회
 	{
-		if (p->state == SLEEPING && p->chan == chan)
+		if (p->state == SLEEPING && p->chan == chan)	// 프로세스 상태를  RUNNABLE 상태로 만들기 위한 조건
 		{
-			p->state = RUNNABLE;
-			assign_min_priority(p);
+			p->state = RUNNABLE;	// RUNNABLE로 바꿈으로써 스케줄링에서 고려할 프로세스에 포함됨
+			assign_min_priority(p);	// ptable에 저장된 min_priority를 프로세스의 priority로 지정
 		}
 	}
 }
@@ -638,9 +630,7 @@ void procdump(void)
 void do_weightset(int weight)
 {
 	acquire(&ptable.lock);
-	// task 10
 	myproc()->weight = weight;
-
 	release(&ptable.lock);
 }
 

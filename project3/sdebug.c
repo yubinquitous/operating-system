@@ -19,17 +19,15 @@ void sdebug_func(void)
 			break;
 		if (pid == 0) // 자식 프로세스
 		{
-			int counter = 0;
+			int counter = -1;
 			int first = 1;
 			int print_counter = PRINT_CYCLE;
 
 			weightset(n + 1);
 			int start_tick = uptime();
 
-			while (counter <= TOTAL_COUNTER)
+			while (++counter < TOTAL_COUNTER)
 			{
-				// task
-				++counter;
 				--print_counter;
 				if (print_counter == 0)
 				{
