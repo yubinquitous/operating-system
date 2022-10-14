@@ -15,42 +15,25 @@ void sdebug_func(void)
 	for (n = 0; n < PNUM; n++) // 프로세스 개수만큼 수행
 	{
 		pid = fork();
-		if (pid < 0)
-			break;
 		if (pid == 0) // 자식 프로세스
 		{
-			int counter = -1;
-			int first = 1;
-			int print_counter = PRINT_CYCLE;
-
+			int start_tick = uptime(); // 프로세스 시작 시간
 			weightset(n + 1);
-			int start_tick = uptime();
 
-			while (++counter < TOTAL_COUNTER)
+			for (int j = 0; j < TOTAL_COUNTER; j++) // counter 값만큼 수행
 			{
-				--print_counter;
-				if (print_counter == 0)
+				if (j == PRINT_CYCLE) // 프로세스 정보를 주기에 맞게 한번만 출력
 				{
-					if (first)
-					{
-						int end_tick = uptime();
-						printf(1, "PID: %d, WEIGHT: %d, TIMES: %d ms\n", getpid(), n + 1, (end_tick - start_tick) * 10);
-						first = 0;
-					}
-					print_counter = PRINT_CYCLE;
+					int tick = (uptime() - start_tick) * 10; // 프로세스 시작 후 출력까지 걸린 시간
+					printf(1, "PID: %d, WEIGHT: %d, TIMES: %d ms\n", getpid(), n + 1, tick);
 				}
 			}
-
 			printf(1, "PID: %d terminated\n", getpid());
 			exit();
 		}
+		else if (pid < 0) // fork 실패
+			break;
 	}
-
-	// if (n == PNUM)
-	// {
-	//	printf(1, "fork claimed to work %d times!\n", PNUM);
-	// 	exit();
-	// }
 
 	for (; n > 0; n--)
 	{
