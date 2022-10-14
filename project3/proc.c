@@ -38,7 +38,7 @@ struct proc *ssu_schedule()
 		if (p->state != RUNNABLE) // RUNNABLE한 프로세스만 순회
 			continue;
 
-		if (!ret|| p->priority < ret->priority) // ret->priority보다 p->priority가 작다면ret 갱신
+		if (!ret || p->priority < ret->priority) // ret->priority보다 p->priority가 작다면ret 갱신
 			ret = p;
 	}
 
@@ -46,7 +46,7 @@ struct proc *ssu_schedule()
 	if (ret) // 새로 실행시킬 프로세스가 있다면
 	{
 		cprintf("PID: %d, NAME: %s, WEIGHT: %d, PRIORITY: %d\n", ret->pid, ret->name, ret->weight, ret->priority);
-	}	
+	}
 #endif
 
 	return ret;
@@ -197,7 +197,7 @@ void userinit(void)
 	struct proc *p;
 	extern char _binary_initcode_start[], _binary_initcode_size[];
 
-	ptable.min_priority = 3; // init process가 처음 생기는 시점에서 최소 priority 값을 3으로 지정
+	ptable.min_priority = 3; // 시스템 시작 시 총 세 개의 유저 프로세스가 생성되므로 최소 priority 값을 3으로 지정
 
 	p = allocproc();
 
@@ -435,7 +435,7 @@ void scheduler(void)
 		swtch(&(c->scheduler), p->context);
 		switchkvm();
 
-		update_priority(p);	// 실행한 프로세스의 priority를 갱신
+		update_priority(p);	   // 실행한 프로세스의 priority를 갱신
 		update_min_priority(); // ptable의 min_priority를 갱신
 
 		// Process is done running for now.
@@ -548,12 +548,12 @@ wakeup1(void *chan)
 {
 	struct proc *p;
 
-	for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)	// ptable의 모든 프로세스 순회
+	for (p = ptable.proc; p < &ptable.proc[NPROC]; p++) // ptable의 모든 프로세스 순회
 	{
-		if (p->state == SLEEPING && p->chan == chan)	// 프로세스 상태를  RUNNABLE 상태로 만들기 위한 조건
+		if (p->state == SLEEPING && p->chan == chan) // 프로세스 상태를  RUNNABLE 상태로 만들기 위한 조건
 		{
 			p->state = RUNNABLE;	// RUNNABLE로 바꿈으로써 스케줄링에서 고려할 프로세스에 포함됨
-			assign_min_priority(p);	// ptable에 저장된 min_priority를 프로세스의 priority로 지정
+			assign_min_priority(p); // ptable에 저장된 min_priority를 프로세스의 priority로 지정
 		}
 	}
 }
@@ -633,4 +633,3 @@ void do_weightset(int weight)
 	myproc()->weight = weight;
 	release(&ptable.lock);
 }
-

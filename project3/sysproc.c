@@ -87,7 +87,7 @@ int sys_uptime(void)
 int sys_weightset(void)
 {
 	int weight;
-	if (argint(0, &weight) < 0)
+	if (argint(0, &weight) < 0 || weight < 1)
 		return -1;
 	do_weightset(weight);
 	return weight;
