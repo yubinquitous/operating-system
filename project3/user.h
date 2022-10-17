@@ -24,7 +24,7 @@ int getpid(void);
 char *sbrk(int);
 int sleep(int);
 int uptime(void);
-int weightset(int weight);
+int weightset(int weight); // 20193061
 
 // ulib.c
 int stat(const char *, struct stat *);

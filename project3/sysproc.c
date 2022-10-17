@@ -84,11 +84,14 @@ int sys_uptime(void)
 	return xticks;
 }
 
+// 20193061
 int sys_weightset(void)
 {
 	int weight;
-	if (argint(0, &weight) < 0 || weight < 1)
+
+	if (argint(0, &weight) < 0 || weight < 1) // 인자를 받지 못했거나 weight가 1보다 작으면 에러 반환
 		return -1;
-	do_weightset(weight);
+	do_weightset(weight); // 프로세스의 가중치로 weigth를 설정
+
 	return weight;
 }
