@@ -188,43 +188,53 @@ void simulate_lru(int n_frames, int *reference)
 	printf("LRU page fault: %d\n", page_fault);
 }
 
+void update_counter(int *counter)
+{
+	for (int i = 0; i < REFERENCE_SIZE; i++)
+	{
+		if (counter[i] > 0)
+			counter[i] = counter[i] >> 1;
+	}
+}
+
 void simulate_lfu(int n_frames, int *reference)
 {
 	int frame[n_frames];
 	int page_fault = 0;
 	int frame_idx = 0;
+	int counter[REFERENCE_SIZE] = {0};
 
 	init_frame(frame, n_frames);
 	for (int i = 0; i < REFERENCE_SIZE; i++)
 	{
+		if (i != 0 && i % 10 == 0)
+			update_counter(counter);
 		if (is_hit(frame, n_frames, reference[i]))
+		{
+			++counter[reference[i]];
 			continue;
+		}
 		++page_fault;
 		if (page_fault < n_frames)
 		{
 			frame[frame_idx] = reference[i];
 			frame_idx = (frame_idx + 1) % n_frames;
+			++counter[reference[i]];
 		}
 		else
 		{
-			int max_idx = 0;
-			int max_dist = 0;
+			int min_idx = 0;
+			int min_count = 0;
 			for (int j = 0; j < n_frames; j++)
 			{
-				int dist = 0;
-				for (int k = i - 1; k >= 0; k--)
+				if (counter[frame[j]] < min_count)
 				{
-					++dist;
-					if (frame[j] == reference[k])
-						break;
-				}
-				if (dist > max_dist)
-				{
-					max_dist = dist;
-					max_idx = j;
+					min_count = counter[frame[j]];
+					min_idx = j;
 				}
 			}
-			frame[max_idx] = reference[i];
+			frame[min_idx] = reference[i];
+			++counter[reference[i]];
 		}
 	}
 	// test_print_frame(frame, n_frames); // test
