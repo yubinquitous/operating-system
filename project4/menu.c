@@ -1,4 +1,4 @@
-#include "project4.h"
+#include "page_replacement.h"
 
 void set_algorithm(char *algorithm, int num)
 {

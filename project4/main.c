@@ -1,4 +1,4 @@
-#include "project4.h"
+#include "page_replacement.h"
 
 void test_print_frame(int *frame, int n_frames) // test
 {
@@ -48,22 +48,6 @@ void set_reference(int *reference, int input_method)
 		// close(fd);
 		*/
 	}
-}
-
-void init_frame(int *frame, int n_frames)
-{
-	for (int i = 0; i < n_frames; i++)
-		frame[i] = 0;
-}
-
-char is_hit(int *frame, int n_frames, int page)
-{
-	for (int i = 0; i < n_frames; i++)
-	{
-		if (frame[i] == page)
-			return 1;
-	}
-	return 0;
 }
 
 void simulate_fifo(int n_frames, int *reference)
@@ -188,59 +172,6 @@ void simulate_lru(int n_frames, int *reference)
 	printf("LRU page fault: %d\n", page_fault);
 }
 
-void update_counter(int *counter)
-{
-	for (int i = 0; i < REFERENCE_SIZE; i++)
-	{
-		if (counter[i] > 0)
-			counter[i] = counter[i] >> 1;
-	}
-}
-
-void simulate_lfu(int n_frames, int *reference)
-{
-	int frame[n_frames];
-	int page_fault = 0;
-	int frame_idx = 0;
-	int counter[REFERENCE_SIZE] = {0};
-
-	init_frame(frame, n_frames);
-	for (int i = 0; i < REFERENCE_SIZE; i++)
-	{
-		if (i != 0 && i % 10 == 0)
-			update_counter(counter);
-		if (is_hit(frame, n_frames, reference[i]))
-		{
-			++counter[reference[i]];
-			continue;
-		}
-		++page_fault;
-		if (page_fault < n_frames)
-		{
-			frame[frame_idx] = reference[i];
-			frame_idx = (frame_idx + 1) % n_frames;
-			++counter[reference[i]];
-		}
-		else
-		{
-			int min_idx = 0;
-			int min_count = 0;
-			for (int j = 0; j < n_frames; j++)
-			{
-				if (counter[frame[j]] < min_count)
-				{
-					min_count = counter[frame[j]];
-					min_idx = j;
-				}
-			}
-			frame[min_idx] = reference[i];
-			++counter[reference[i]];
-		}
-	}
-	// test_print_frame(frame, n_frames); // test
-	printf("LFU page fault: %d\n", page_fault);
-}
-
 void simulate_algorithm(int n_frames, int *reference, int algorithm_type)
 {
 	if (algorithm_type == OPTIMAL)
@@ -254,7 +185,7 @@ void simulate_algorithm(int n_frames, int *reference, int algorithm_type)
 	else if (algorithm_type == LFU)
 		simulate_lfu(n_frames, reference);
 	else if (algorithm_type == SC)
-		;
+		simulate_sc(n_frames, reference);
 	else if (algorithm_type == ESC)
 		;
 }
