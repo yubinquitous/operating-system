@@ -114,6 +114,9 @@ void simulate_lifo(int n_frames, int *reference)
 	int page_fault = 0;
 	int frame_idx = 0;
 
+	// frame 초기화
+	for (int i = 0; i < n_frames; i++)
+		frame[i] = -1;
 	for (int i = 0; i < 500; i++)
 	{
 		char is_hit = 0;
@@ -131,7 +134,8 @@ void simulate_lifo(int n_frames, int *reference)
 		{
 			++page_fault;
 			frame[frame_idx] = reference[i];
-			frame_idx = (frame_idx + n_frames - 1) % n_frames;
+			if (frame_idx != n_frames - 1)
+				frame_idx = (frame_idx + 1) % n_frames;
 		}
 	}
 	printf("LIFO page fault: %d\n", page_fault);
@@ -147,6 +151,7 @@ void simulate_algorithm(int n_frames, int *reference, int algorithm_type)
 		simulate_lifo(n_frames, reference);
 	else if (algorithm_type == LRU)
 		;
+	// simulate_lru(n_frames, reference);
 	else if (algorithm_type == LFU)
 		;
 	else if (algorithm_type == SC)
