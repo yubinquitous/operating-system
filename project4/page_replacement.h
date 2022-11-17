@@ -34,9 +34,15 @@ typedef struct s_menu
 typedef struct s_frame
 {
 	int page;
-	char r_bit;
 	struct s_frame *next;
 } t_frame;
+
+typedef struct s_frame_with_r
+{
+	int page;
+	int r_bit;
+	struct s_frame_with_r *next;
+} t_frame_with_r;
 
 // menu.c
 void input(t_menu *menu);
@@ -45,6 +51,12 @@ void input(t_menu *menu);
 void exit_with_msg(char *msg);
 void init_frame(int *frame, int n_frames);
 char is_hit(int *frame, int n_frames, int page);
+void init_frame_list(t_frame *head, t_frame **tail, int n_frames);
+void print_frame_list(t_frame *frame, int n_frames, char *result);
+void free_frame_list(t_frame *head);
+
+// simulate_lru.c
+void simulate_lru(int n_frames, int *reference);
 
 // simulate_lfu.c
 void simulate_lfu(int n_frames, int *reference);

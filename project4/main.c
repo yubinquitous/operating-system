@@ -28,25 +28,25 @@ void set_reference(int *reference, int input_method)
 	else // 입력값 유효 검사를 했으므로 1이 아닌 input_method는 항상 2이다
 	{
 		// 사용자 생성 파일 오픈
-		// char reference_file[100] = {
-		// 	'\0',
-		// };
-		// test
-		char *reference_file = "reference.txt";
-		// printf("사용자 생성 파일을 입력하시오.\n>> ");
-		// scanf("%s", reference_file);
+		char reference_file[100] = {
+			'\0',
+		};
+		// char *reference_file = "reference.txt";
+		printf("사용자 생성 파일을 입력하시오.\n>> ");
+		scanf("%s", reference_file);
 		int fd = open(reference_file, O_RDONLY);
 		if (fd < 0)
 			exit_with_msg("파일 오픈 실패");
 		for (int i = 0; i < REFERENCE_SIZE; i++)
 			read(fd, &reference[i], sizeof(int));
-		/* test
-		// int fd = open("./reference.txt", O_RDONLY);
+		// /* test
+		//  */
+		// int fd2 = open("./reference.txt", O_RDONLY);
 		// int r;
-		// read(fd, &r, sizeof(int));
+		// read(fd2, &r, sizeof(int));
 		// printf("%d\n", r);
-		// close(fd);
-		*/
+		// close(fd2);
+		// // * /
 	}
 }
 
@@ -129,49 +129,6 @@ void simulate_lifo(int n_frames, int *reference)
 	printf("LIFO page fault: %d\n", page_fault);
 }
 
-void simulate_lru(int n_frames, int *reference)
-{
-	int frame[n_frames];
-	int page_fault = 0;
-	int frame_idx = 0;
-
-	init_frame(frame, n_frames);
-	for (int i = 0; i < REFERENCE_SIZE; i++)
-	{
-		if (is_hit(frame, n_frames, reference[i]))
-			continue;
-		++page_fault;
-		if (page_fault <= n_frames)
-		{
-			frame[frame_idx] = reference[i];
-			frame_idx = (frame_idx + 1) % n_frames;
-		}
-		else
-		{
-			int max_idx = 0;
-			int max_dist = 0;
-			for (int j = 0; j < n_frames; j++)
-			{
-				int dist = 0;
-				for (int k = i - 1; k >= 0; k--)
-				{
-					++dist;
-					if (frame[j] == reference[k])
-						break;
-				}
-				if (dist > max_dist)
-				{
-					max_dist = dist;
-					max_idx = j;
-				}
-			}
-			frame[max_idx] = reference[i];
-		}
-	}
-	// test_print_frame(frame, n_frames); // test
-	printf("LRU page fault: %d\n", page_fault);
-}
-
 void simulate_algorithm(int n_frames, int *reference, int algorithm_type)
 {
 	if (algorithm_type == OPTIMAL)
@@ -185,7 +142,8 @@ void simulate_algorithm(int n_frames, int *reference, int algorithm_type)
 	else if (algorithm_type == LFU)
 		simulate_lfu(n_frames, reference);
 	else if (algorithm_type == SC)
-		simulate_sc(n_frames, reference);
+		;
+	// simulate_sc(n_frames, reference);
 	else if (algorithm_type == ESC)
 		;
 }

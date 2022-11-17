@@ -1,4 +1,4 @@
-NAME = page
+NAME = a.out
 
 CC = gcc
 CFLAG = -g -fsanitize=address
@@ -7,8 +7,9 @@ CFLAG = -g -fsanitize=address
 SRC = main.c \
 	menu.c \
 	utils.c \
+	simulate_lru.c \
 	simulate_lfu.c \
-	simulate_sc.c \
+	# simulate_sc.c \
 
 OBJ = $(SRC:%.c=%.o)
 

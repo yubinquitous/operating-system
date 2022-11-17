@@ -20,7 +20,6 @@ int main(void)
 	{
 		page = rand() % 30 + 1;
 		write(fd, &page, sizeof(int));
-		write(fd, " ", 1);
 	}
 	close(fd);
 	return 0;
