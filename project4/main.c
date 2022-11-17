@@ -34,8 +34,9 @@ void set_reference(int *reference, int input_method)
 	}
 }
 
-void simulate_fifo(int *reference, int *frame, int n_frames)
+void simulate_fifo(int n_frames, int *reference)
 {
+	int frame[n_frames];
 	int page_fault = 0;
 	int frame_idx = 0;
 
@@ -62,19 +63,57 @@ void simulate_fifo(int *reference, int *frame, int n_frames)
 	printf("FIFO page fault: %d\n", page_fault);
 }
 
-void simulate_algorithm(int n_frames, int *reference, int algorithm_type)
+void simulate_optimal(int n_frames, int *reference)
 {
 	int frame[n_frames];
+	int page_fault = 0;
+	int frame_idx = 0;
 
-	switch (algorithm_type)
+	for (int i = 0; i < 500; i++)
 	{
-	// case OPTIMAL:
-	// 	simulate_optimal(n_frames, reference);
-	case FIFO:
-		simulate_fifo(reference, frame, n_frames);
-	default:
-		break;
+		char is_hit = 0;
+		for (int j = 0; j < n_frames; j++)
+		{
+			if (reference[i] == frame[j])
+			{
+				is_hit = 1;
+				break;
+			}
+		}
+		if (is_hit)
+			continue;
+		else
+		{
+			++page_fault;
+			int max_idx = 0;
+			int max_dist = 0;
+			for (int j = 0; j < n_frames; j++)
+			{
+				int dist = 0;
+				for (int k = i + 1; k < 500; k++)
+				{
+					if (frame[j] == reference[k])
+						break;
+					++dist;
+				}
+				if (dist > max_dist)
+				{
+					max_dist = dist;
+					max_idx = j;
+				}
+			}
+			frame[max_idx] = reference[i];
+		}
 	}
+	printf("Optimal page fault: %d\n", page_fault);
+}
+
+void simulate_algorithm(int n_frames, int *reference, int algorithm_type)
+{
+	if (algorithm_type == OPTIMAL)
+		simulate_optimal(n_frames, reference);
+	else if (algorithm_type == FIFO)
+		simulate_fifo(n_frames, reference);
 }
 
 void init_menu(t_menu *menu)
@@ -95,16 +134,9 @@ int main(void)
 	init_menu(&menu);
 	input(&menu);
 	set_reference(reference, menu.input_method); // 참조 페이지 스트링 생성
-	for (int i = 0; i < menu.cnt; i++)
+	for (int i = 0; i < 7; i++)
 	{
-		int j = -1;
-		while (++j < 8)
-		{
-			if (menu.algorithm[j] == 1)
-			{
-				simulate_algorithm(menu.n_frames, reference, j);
-				menu.algorithm[j] = 0;
-			}
-		}
+		if (menu.algorithm[i])
+			simulate_algorithm(menu.n_frames, reference, i);
 	}
 }
