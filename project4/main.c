@@ -56,6 +56,16 @@ void init_frame(int *frame, int n_frames)
 		frame[i] = 0;
 }
 
+char is_hit(int *frame, int n_frames, int page)
+{
+	for (int i = 0; i < n_frames; i++)
+	{
+		if (frame[i] == page)
+			return 1;
+	}
+	return 0;
+}
+
 void simulate_fifo(int n_frames, int *reference)
 {
 	int frame[n_frames];
@@ -65,23 +75,11 @@ void simulate_fifo(int n_frames, int *reference)
 	init_frame(frame, n_frames);
 	for (int i = 0; i < REFERENCE_SIZE; i++)
 	{
-		char is_hit = 0;
-		for (int j = 0; j < n_frames; j++)
-		{
-			if (reference[i] == frame[j])
-			{
-				is_hit = 1;
-				break;
-			}
-		}
-		if (is_hit)
+		if (is_hit(frame, n_frames, reference[i]))
 			continue;
-		else
-		{
-			++page_fault;
-			frame[frame_idx] = reference[i];
-			frame_idx = (frame_idx + 1) % n_frames;
-		}
+		++page_fault;
+		frame[frame_idx] = reference[i];
+		frame_idx = (frame_idx + 1) % n_frames;
 	}
 	printf("FIFO page fault: %d\n", page_fault);
 }
@@ -95,46 +93,34 @@ void simulate_optimal(int n_frames, int *reference)
 	init_frame(frame, n_frames);
 	for (int i = 0; i < REFERENCE_SIZE; i++)
 	{
-		char is_hit = 0;
-		for (int j = 0; j < n_frames; j++)
-		{
-			if (reference[i] == frame[j])
-			{
-				is_hit = 1;
-				break;
-			}
-		}
-		if (is_hit)
+		if (is_hit(frame, n_frames, reference[i]))
 			continue;
+		++page_fault;
+		if (page_fault < n_frames)
+		{
+			frame[frame_idx] = reference[i];
+			frame_idx = (frame_idx + 1) % n_frames;
+		}
 		else
 		{
-			++page_fault;
-			if (page_fault < n_frames)
+			int max_idx = 0;
+			int max_dist = 0;
+			for (int j = 0; j < n_frames; j++)
 			{
-				frame[frame_idx] = reference[i];
-				frame_idx = (frame_idx + 1) % n_frames;
-			}
-			else
-			{
-				int max_idx = 0;
-				int max_dist = 0;
-				for (int j = 0; j < n_frames; j++)
+				int dist = 0;
+				for (int k = i + 1; k < REFERENCE_SIZE; k++)
 				{
-					int dist = 0;
-					for (int k = i + 1; k < REFERENCE_SIZE; k++)
-					{
-						++dist;
-						if (frame[j] == reference[k])
-							break;
-					}
-					if (dist > max_dist)
-					{
-						max_dist = dist;
-						max_idx = j;
-					}
+					++dist;
+					if (frame[j] == reference[k])
+						break;
 				}
-				frame[max_idx] = reference[i];
+				if (dist > max_dist)
+				{
+					max_dist = dist;
+					max_idx = j;
+				}
 			}
+			frame[max_idx] = reference[i];
 		}
 	}
 	printf("Optimal page fault: %d\n", page_fault);
@@ -149,24 +135,12 @@ void simulate_lifo(int n_frames, int *reference)
 	init_frame(frame, n_frames);
 	for (int i = 0; i < REFERENCE_SIZE; i++)
 	{
-		char is_hit = 0;
-		for (int j = 0; j < n_frames; j++)
-		{
-			if (reference[i] == frame[j])
-			{
-				is_hit = 1;
-				break;
-			}
-		}
-		if (is_hit)
+		if (is_hit(frame, n_frames, reference[i]))
 			continue;
-		else
-		{
-			++page_fault;
-			frame[frame_idx] = reference[i];
-			if (frame_idx != n_frames - 1)
-				frame_idx = (frame_idx + 1) % n_frames;
-		}
+		++page_fault;
+		frame[frame_idx] = reference[i];
+		if (frame_idx != n_frames - 1)
+			frame_idx = (frame_idx + 1) % n_frames;
 	}
 	printf("LIFO page fault: %d\n", page_fault);
 }
@@ -180,50 +154,81 @@ void simulate_lru(int n_frames, int *reference)
 	init_frame(frame, n_frames);
 	for (int i = 0; i < REFERENCE_SIZE; i++)
 	{
-		char is_hit = 0;
-		for (int j = 0; j < n_frames; j++)
-		{
-			if (reference[i] == frame[j])
-			{
-				is_hit = 1;
-				break;
-			}
-		}
-		if (is_hit)
+		if (is_hit(frame, n_frames, reference[i]))
 			continue;
+		++page_fault;
+		if (page_fault < n_frames)
+		{
+			frame[frame_idx] = reference[i];
+			frame_idx = (frame_idx + 1) % n_frames;
+		}
 		else
 		{
-			++page_fault;
-			if (page_fault < n_frames)
+			int max_idx = 0;
+			int max_dist = 0;
+			for (int j = 0; j < n_frames; j++)
 			{
-				frame[frame_idx] = reference[i];
-				frame_idx = (frame_idx + 1) % n_frames;
-			}
-			else
-			{
-				int max_idx = 0;
-				int max_dist = 0;
-				for (int j = 0; j < n_frames; j++)
+				int dist = 0;
+				for (int k = i - 1; k >= 0; k--)
 				{
-					int dist = 0;
-					for (int k = i - 1; k >= 0; k--)
-					{
-						++dist;
-						if (frame[j] == reference[k])
-							break;
-					}
-					if (dist > max_dist)
-					{
-						max_dist = dist;
-						max_idx = j;
-					}
+					++dist;
+					if (frame[j] == reference[k])
+						break;
 				}
-				frame[max_idx] = reference[i];
+				if (dist > max_dist)
+				{
+					max_dist = dist;
+					max_idx = j;
+				}
 			}
+			frame[max_idx] = reference[i];
 		}
 	}
 	// test_print_frame(frame, n_frames); // test
 	printf("LRU page fault: %d\n", page_fault);
+}
+
+void simulate_lfu(int n_frames, int *reference)
+{
+	int frame[n_frames];
+	int page_fault = 0;
+	int frame_idx = 0;
+
+	init_frame(frame, n_frames);
+	for (int i = 0; i < REFERENCE_SIZE; i++)
+	{
+		if (is_hit(frame, n_frames, reference[i]))
+			continue;
+		++page_fault;
+		if (page_fault < n_frames)
+		{
+			frame[frame_idx] = reference[i];
+			frame_idx = (frame_idx + 1) % n_frames;
+		}
+		else
+		{
+			int max_idx = 0;
+			int max_dist = 0;
+			for (int j = 0; j < n_frames; j++)
+			{
+				int dist = 0;
+				for (int k = i - 1; k >= 0; k--)
+				{
+					++dist;
+					if (frame[j] == reference[k])
+						break;
+				}
+				if (dist > max_dist)
+				{
+					max_dist = dist;
+					max_idx = j;
+				}
+			}
+			frame[max_idx] = reference[i];
+		}
+	}
+	// test_print_frame(frame, n_frames); // test
+	printf("LFU page fault: %d\n", page_fault);
 }
 
 void simulate_algorithm(int n_frames, int *reference, int algorithm_type)
@@ -237,7 +242,7 @@ void simulate_algorithm(int n_frames, int *reference, int algorithm_type)
 	else if (algorithm_type == LRU)
 		simulate_lru(n_frames, reference);
 	else if (algorithm_type == LFU)
-		;
+		simulate_lfu(n_frames, reference);
 	else if (algorithm_type == SC)
 		;
 	else if (algorithm_type == ESC)
