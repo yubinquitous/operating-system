@@ -9,15 +9,7 @@
 #include <unistd.h>
 
 #define REFERENCE_SIZE 500
-
-typedef struct s_menu
-{
-	char algorithm[7];
-	char algorithm_all_flag;
-	int n_frames;
-	int input_method;
-	int cnt;
-} t_menu;
+#define MAX_FRAME 30
 
 enum e_algorithm_type
 {
@@ -29,6 +21,15 @@ enum e_algorithm_type
 	SC,
 	ESC,
 };
+
+typedef struct s_menu
+{
+	char algorithm[7];
+	char algorithm_all_flag;
+	int n_frames;
+	int input_method;
+	int cnt;
+} t_menu;
 
 typedef struct s_frame
 {

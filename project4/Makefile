@@ -1,7 +1,7 @@
-NAME = a.out
+NAME = page
 
 CC = gcc
-CFLAG = -fsanitize=address -g
+CFLAG = -g -fsanitize=address
 # CFLAG = -Wall -Wextra -Werror
 
 SRC = main.c \
@@ -10,20 +10,22 @@ SRC = main.c \
 	simulate_lfu.c \
 	simulate_sc.c \
 
-OBJ = $(SRC:.c=.o)
+OBJ = $(SRC:%.c=%.o)
+
+RM = rm -f
 
 all: $(NAME)
 .PHONY: all
 
-$(NAME): $(OBJ)
-	$(CC) $(CFLAG) $(OBJ) -o $(NAME)
+$(NAME):	$(OBJ)
+	$(CC) $(CFLAG) $(SRC) -o $(NAME)
 
 clean:
-	rm -f $(OBJ)
+	$(RM) $(OBJ)
 .PHONY: clean
 
 fclean: clean
-	rm -f $(NAME)
+	$(RM) $(NAME)
 .PHONY: fclean
 
 re:

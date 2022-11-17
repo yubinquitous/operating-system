@@ -80,7 +80,7 @@ void simulate_optimal(int n_frames, int *reference)
 		if (is_hit(frame, n_frames, reference[i]))
 			continue;
 		++page_fault;
-		if (page_fault < n_frames)
+		if (page_fault <= n_frames)
 		{
 			frame[frame_idx] = reference[i];
 			frame_idx = (frame_idx + 1) % n_frames;
@@ -141,7 +141,7 @@ void simulate_lru(int n_frames, int *reference)
 		if (is_hit(frame, n_frames, reference[i]))
 			continue;
 		++page_fault;
-		if (page_fault < n_frames)
+		if (page_fault <= n_frames)
 		{
 			frame[frame_idx] = reference[i];
 			frame_idx = (frame_idx + 1) % n_frames;

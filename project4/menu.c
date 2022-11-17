@@ -15,7 +15,7 @@ static void input_algorithm(t_menu *menu)
 {
 	int cnt = 0;
 	int num;
-	char *line;
+	char *line = 0;
 	size_t tmp;
 
 	getline(&line, &tmp, stdin);
@@ -38,7 +38,7 @@ static void input_algorithm(t_menu *menu)
 	if (cnt == 0)
 		exit_with_msg("알고리즘을 입력해주세요.");
 	menu->cnt = cnt;
-	// free(line);
+	free(line);
 	line = 0;
 }
 
