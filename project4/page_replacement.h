@@ -44,24 +44,24 @@ typedef struct s_frame_with_r
 	struct s_frame_with_r *next;
 } t_frame_with_r;
 
-// menu.c
+// menu
 void input(t_menu *menu);
 
-// utils.c
+// utils
 void exit_with_msg(char *msg);
 void init_frame(int *frame, int n_frames);
 char is_hit(int *frame, int n_frames, int page);
 void init_frame_list(t_frame *head, t_frame **tail, int n_frames);
 void print_frame_list(t_frame *frame, int n_frames, char *result);
+void print_frame_array(int *frame, int n_frames, char *msg);
 void free_frame_list(t_frame *head);
 
-// simulate_lru.c
+// simulate
+void simulate_optimal(int n_frames, int *reference);
+void simulate_fifo(int n_frames, int *reference);
+void simulate_lifo(int n_frames, int *reference);
 void simulate_lru(int n_frames, int *reference);
-
-// simulate_lfu.c
 void simulate_lfu(int n_frames, int *reference);
-
-// simulate_sc.c
 void simulate_sc(int n_frames, int *reference);
 
 #endif

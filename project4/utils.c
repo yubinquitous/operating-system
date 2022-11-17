@@ -6,6 +6,13 @@ void exit_with_msg(char *msg)
 	exit(1);
 }
 
+void print_frame_array(int *frame, int n_frames, char *msg)
+{
+	for (int i = 0; i < n_frames; i++)
+		printf("%d\t", frame[i]);
+	printf("%s\n", msg);
+}
+
 void print_frame_list(t_frame *head, int n_frames, char *result)
 {
 	t_frame *tmp = head;

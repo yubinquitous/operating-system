@@ -7,8 +7,11 @@ CFLAG = -g -fsanitize=address
 SRC = main.c \
 	menu.c \
 	utils.c \
-	simulate_lru.c \
-	simulate_lfu.c \
+	simulate/fifo.c \
+	simulate/lru.c \
+	simulate/lifo.c \
+	simulate/lfu.c \
+	simulate/optimal.c \
 	# simulate_sc.c \
 
 OBJ = $(SRC:%.c=%.o)

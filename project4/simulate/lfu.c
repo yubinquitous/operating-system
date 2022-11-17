@@ -1,4 +1,4 @@
-#include "page_replacement.h"
+#include "../page_replacement.h"
 
 void update_counter(int *counter)
 {

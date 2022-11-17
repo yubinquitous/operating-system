@@ -23,110 +23,23 @@ void set_reference(int *reference, int input_method)
 			reference[i] = rand() % 30 + 1;
 			printf("%d ", reference[i]);
 		}
-		printf("\n");
 	}
 	else // 입력값 유효 검사를 했으므로 1이 아닌 input_method는 항상 2이다
 	{
 		// 사용자 생성 파일 오픈
-		char reference_file[100] = {
-			'\0',
-		};
-		// char *reference_file = "reference.txt";
+		char reference_file[100] = {0};
 		printf("사용자 생성 파일을 입력하시오.\n>> ");
 		scanf("%s", reference_file);
 		int fd = open(reference_file, O_RDONLY);
 		if (fd < 0)
 			exit_with_msg("파일 오픈 실패");
 		for (int i = 0; i < REFERENCE_SIZE; i++)
+		{
 			read(fd, &reference[i], sizeof(int));
-		// /* test
-		//  */
-		// int fd2 = open("./reference.txt", O_RDONLY);
-		// int r;
-		// read(fd2, &r, sizeof(int));
-		// printf("%d\n", r);
-		// close(fd2);
-		// // * /
-	}
-}
-
-void simulate_fifo(int n_frames, int *reference)
-{
-	int frame[n_frames];
-	int page_fault = 0;
-	int frame_idx = 0;
-
-	init_frame(frame, n_frames);
-	for (int i = 0; i < REFERENCE_SIZE; i++)
-	{
-		if (is_hit(frame, n_frames, reference[i]))
-			continue;
-		++page_fault;
-		frame[frame_idx] = reference[i];
-		frame_idx = (frame_idx + 1) % n_frames;
-	}
-	printf("FIFO page fault: %d\n", page_fault);
-}
-
-void simulate_optimal(int n_frames, int *reference)
-{
-	int frame[n_frames];
-	int page_fault = 0;
-	int frame_idx = 0;
-
-	init_frame(frame, n_frames);
-	for (int i = 0; i < REFERENCE_SIZE; i++)
-	{
-		if (is_hit(frame, n_frames, reference[i]))
-			continue;
-		++page_fault;
-		if (page_fault <= n_frames)
-		{
-			frame[frame_idx] = reference[i];
-			frame_idx = (frame_idx + 1) % n_frames;
-		}
-		else
-		{
-			int max_idx = 0;
-			int max_dist = 0;
-			for (int j = 0; j < n_frames; j++)
-			{
-				int dist = 0;
-				for (int k = i + 1; k < REFERENCE_SIZE; k++)
-				{
-					++dist;
-					if (frame[j] == reference[k])
-						break;
-				}
-				if (dist > max_dist)
-				{
-					max_dist = dist;
-					max_idx = j;
-				}
-			}
-			frame[max_idx] = reference[i];
+			printf("%d ", reference[i]);
 		}
 	}
-	printf("Optimal page fault: %d\n", page_fault);
-}
-
-void simulate_lifo(int n_frames, int *reference)
-{
-	int frame[n_frames];
-	int page_fault = 0;
-	int frame_idx = 0;
-
-	init_frame(frame, n_frames);
-	for (int i = 0; i < REFERENCE_SIZE; i++)
-	{
-		if (is_hit(frame, n_frames, reference[i]))
-			continue;
-		++page_fault;
-		frame[frame_idx] = reference[i];
-		if (frame_idx != n_frames - 1)
-			frame_idx = (frame_idx + 1) % n_frames;
-	}
-	printf("LIFO page fault: %d\n", page_fault);
+	printf("\n");
 }
 
 void simulate_algorithm(int n_frames, int *reference, int algorithm_type)

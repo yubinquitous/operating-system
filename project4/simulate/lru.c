@@ -1,5 +1,4 @@
-#include "page_replacement.h"
-#include "page_replacement.h"
+#include "../page_replacement.h"
 
 void simulate_lru(int n_frames, int *page)
 {
