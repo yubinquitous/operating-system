@@ -34,12 +34,19 @@ void set_reference(int *reference, int input_method)
 	}
 }
 
+void init_frame(int *frame, int n_frames)
+{
+	for (int i = 0; i < n_frames; i++)
+		frame[i] = 0;
+}
+
 void simulate_fifo(int n_frames, int *reference)
 {
 	int frame[n_frames];
 	int page_fault = 0;
 	int frame_idx = 0;
 
+	init_frame(frame, n_frames);
 	for (int i = 0; i < 500; i++)
 	{
 		char is_hit = 0;
@@ -69,6 +76,7 @@ void simulate_optimal(int n_frames, int *reference)
 	int page_fault = 0;
 	int frame_idx = 0;
 
+	init_frame(frame, n_frames);
 	for (int i = 0; i < 500; i++)
 	{
 		char is_hit = 0;
@@ -114,9 +122,7 @@ void simulate_lifo(int n_frames, int *reference)
 	int page_fault = 0;
 	int frame_idx = 0;
 
-	// frame 초기화
-	for (int i = 0; i < n_frames; i++)
-		frame[i] = -1;
+	init_frame(frame, n_frames);
 	for (int i = 0; i < 500; i++)
 	{
 		char is_hit = 0;
