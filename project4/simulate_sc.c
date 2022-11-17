@@ -1,38 +1,73 @@
 #include "page_replacement.h"
 
+char is_hit_list(t_frame *frame, int cnt, int page)
+{
+	t_frame *tmp = frame;
+	for (int i = 0; i < cnt; i++)
+	{
+		if (tmp->page == page)
+		{
+			tmp->r_bit = 1;
+			return 1;
+		}
+		tmp = tmp->next;
+	}
+	return 0;
+}
+
 void simulate_sc(int n_frames, int *reference)
 {
-	int frame[n_frames];
+	t_frame *frame = (t_frame *)malloc(sizeof(t_frame));
+	t_frame *tail;
 	int page_fault = 0;
 	int frame_idx = 0;
-	int r_bit[n_frames];
 
-	init_frame(frame, n_frames);
-	// init_r_bit(r_bit, n_frames);
-	for (int i = 0; i < REFERENCE_SIZE; i++)
+	// reference[0] 값으로 frame 초기화
+	frame->page = reference[0];
+	frame->r_bit = 1;
+	frame->next = frame;
+	tail = frame;
+
+	for (int i = 1; i < REFERENCE_SIZE; i++)
 	{
-		if (is_hit(frame, n_frames, reference[i]))
-		{
-			r_bit[reference[i]] = 1;
+		if (is_hit_list(frame, i, reference[i]))
 			continue;
-		}
 		++page_fault;
-		if (page_fault < n_frames)
+		if (page_fault <= n_frames)
 		{
-			frame[frame_idx] = reference[i];
-			frame_idx = (frame_idx + 1) % n_frames;
-			r_bit[reference[i]] = 1;
+			t_frame *new = (t_frame *)malloc(sizeof(t_frame));
+			new->page = reference[i];
+			new->r_bit = 1;
+			new->next = frame;
+			tail->next = new;
+			tail = new;
 		}
 		else
 		{
-			while (r_bit[frame[frame_idx]] == 1)
+			t_frame *cur = frame;
+			t_frame *head = frame;
+			t_frame *prev = tail;
+			while (1)
 			{
-				r_bit[frame[frame_idx]] = 0;
-				frame_idx = (frame_idx + 1) % n_frames;
+				if (cur->r_bit == 0)
+				{
+					if (cur == head)
+						head = cur->next;
+					prev->next = cur->next;
+					cur->page = reference[i];
+					cur->r_bit = 1;
+					cur->next = head;
+					tail->next = cur;
+					tail = cur;
+					break;
+				}
+				else
+				{
+					cur->r_bit = 0;
+					prev = cur;
+					cur = cur->next;
+				}
 			}
-			frame[frame_idx] = reference[i];
-			frame_idx = (frame_idx + 1) % n_frames;
-			r_bit[reference[i]] = 1;
 		}
 	}
 	// test_print_frame(frame, n_frames); // test
