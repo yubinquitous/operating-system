@@ -108,12 +108,51 @@ void simulate_optimal(int n_frames, int *reference)
 	printf("Optimal page fault: %d\n", page_fault);
 }
 
+void simulate_lifo(int n_frames, int *reference)
+{
+	int frame[n_frames];
+	int page_fault = 0;
+	int frame_idx = 0;
+
+	for (int i = 0; i < 500; i++)
+	{
+		char is_hit = 0;
+		for (int j = 0; j < n_frames; j++)
+		{
+			if (reference[i] == frame[j])
+			{
+				is_hit = 1;
+				break;
+			}
+		}
+		if (is_hit)
+			continue;
+		else
+		{
+			++page_fault;
+			frame[frame_idx] = reference[i];
+			frame_idx = (frame_idx + n_frames - 1) % n_frames;
+		}
+	}
+	printf("LIFO page fault: %d\n", page_fault);
+}
+
 void simulate_algorithm(int n_frames, int *reference, int algorithm_type)
 {
 	if (algorithm_type == OPTIMAL)
 		simulate_optimal(n_frames, reference);
 	else if (algorithm_type == FIFO)
 		simulate_fifo(n_frames, reference);
+	else if (algorithm_type == LIFO)
+		simulate_lifo(n_frames, reference);
+	else if (algorithm_type == LRU)
+		;
+	else if (algorithm_type == LFU)
+		;
+	else if (algorithm_type == SC)
+		;
+	else if (algorithm_type == ESC)
+		;
 }
 
 void init_menu(t_menu *menu)
