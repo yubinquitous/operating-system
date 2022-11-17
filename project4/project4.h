@@ -8,6 +8,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+#define REFERENCE_SIZE 500
+
 typedef struct s_menu
 {
 	char algorithm[7];
