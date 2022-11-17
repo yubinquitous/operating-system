@@ -12,7 +12,7 @@ SRC = main.c \
 	simulate/lifo.c \
 	simulate/lfu.c \
 	simulate/optimal.c \
-	# simulate_sc.c \
+	simulate/sc.c \
 
 OBJ = $(SRC:%.c=%.o)
 

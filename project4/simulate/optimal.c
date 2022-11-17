@@ -1,18 +1,18 @@
 #include "../page_replacement.h"
 
-void simulate_optimal(int n_frames, int *reference)
+void simulate_optimal(int n_frames, int *reference, int fd)
 {
 	int frame[n_frames];
 	int page_fault = 0;
 	int frame_idx = 0;
 
 	init_frame(frame, n_frames);
-	print_frame_array(frame, n_frames, "START");
+	print_frame_array(frame, n_frames, "START", fd);
 	for (int i = 0; i < REFERENCE_SIZE; i++)
 	{
 		if (is_hit(frame, n_frames, reference[i]))
 		{
-			print_frame_array(frame, n_frames, "HIT");
+			print_frame_array(frame, n_frames, "HIT", fd);
 			continue;
 		}
 		++page_fault;
@@ -42,7 +42,7 @@ void simulate_optimal(int n_frames, int *reference)
 			}
 			frame[max_idx] = reference[i];
 		}
-		print_frame_array(frame, n_frames, "miss");
+		print_frame_array(frame, n_frames, "miss", fd);
 	}
 	printf("Optimal page fault: %d\n", page_fault);
 }

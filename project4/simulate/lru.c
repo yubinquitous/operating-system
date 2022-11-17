@@ -1,6 +1,6 @@
 #include "../page_replacement.h"
 
-void simulate_lru(int n_frames, int *page)
+void simulate_lru(int n_frames, int *page, int fd)
 {
 	t_frame *frame = (t_frame *)malloc(sizeof(t_frame));
 	t_frame *head = frame;
@@ -10,7 +10,7 @@ void simulate_lru(int n_frames, int *page)
 
 	frame->page = 0;
 	frame->next = NULL;
-	print_frame_list(head, n_frames, "START");
+	print_frame_list(head, n_frames, "START", fd);
 	for (int i = 0; i < REFERENCE_SIZE; i++)
 	{
 		// check_hit
@@ -39,7 +39,7 @@ void simulate_lru(int n_frames, int *page)
 		}
 		if (is_hit)
 		{
-			print_frame_list(head, n_frames, "HIT");
+			print_frame_list(head, n_frames, "HIT", fd);
 			continue;
 		}
 		// miss
@@ -60,7 +60,7 @@ void simulate_lru(int n_frames, int *page)
 			cur->page = page[i];
 			head = cur;
 		}
-		print_frame_list(head, n_frames, "miss");
+		print_frame_list(head, n_frames, "miss", fd);
 	}
 	free_frame_list(head);
 	printf("LRU page fault: %d\n", page_fault);

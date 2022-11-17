@@ -37,12 +37,12 @@ typedef struct s_frame
 	struct s_frame *next;
 } t_frame;
 
-typedef struct s_frame_with_r
+typedef struct s_frame_with_r_bit
 {
 	int page;
 	int r_bit;
-	struct s_frame_with_r *next;
-} t_frame_with_r;
+	struct s_frame_with_r_bit *next;
+} t_frame_with_r_bit;
 
 // menu
 void input(t_menu *menu);
@@ -52,16 +52,17 @@ void exit_with_msg(char *msg);
 void init_frame(int *frame, int n_frames);
 char is_hit(int *frame, int n_frames, int page);
 void init_frame_list(t_frame *head, t_frame **tail, int n_frames);
-void print_frame_list(t_frame *frame, int n_frames, char *result);
-void print_frame_array(int *frame, int n_frames, char *msg);
+void print_frame_list(t_frame *frame, int n_frames, char *result, int fd);
+void print_frame_array(int *frame, int n_frames, char *msg, int fd);
+void print_frame_with_r_bit(t_frame_with_r_bit *frame, int n_frames, char *msg, int fd);
 void free_frame_list(t_frame *head);
 
 // simulate
-void simulate_optimal(int n_frames, int *reference);
-void simulate_fifo(int n_frames, int *reference);
-void simulate_lifo(int n_frames, int *reference);
-void simulate_lru(int n_frames, int *reference);
-void simulate_lfu(int n_frames, int *reference);
-void simulate_sc(int n_frames, int *reference);
+void simulate_optimal(int n_frames, int *reference, int fd);
+void simulate_fifo(int n_frames, int *reference, int fd);
+void simulate_lifo(int n_frames, int *reference, int fd);
+void simulate_lru(int n_frames, int *reference, int fd);
+void simulate_lfu(int n_frames, int *reference, int fd);
+void simulate_sc(int n_frames, int *reference, int fd);
 
 #endif

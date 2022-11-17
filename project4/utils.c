@@ -6,14 +6,22 @@ void exit_with_msg(char *msg)
 	exit(1);
 }
 
-void print_frame_array(int *frame, int n_frames, char *msg)
+void print_frame_array(int *frame, int n_frames, char *msg, int fd)
 {
+	char buf[100] = {0};
+
 	for (int i = 0; i < n_frames; i++)
+	{
 		printf("%d\t", frame[i]);
+		sprintf(buf, "%d\t", frame[i]);
+		write(fd, buf, strlen(buf));
+	}
 	printf("%s\n", msg);
+	sprintf(buf, "%s\n", msg);
+	write(fd, buf, strlen(buf));
 }
 
-void print_frame_list(t_frame *head, int n_frames, char *result)
+void print_frame_list(t_frame *head, int n_frames, char *result, int fd)
 {
 	t_frame *tmp = head;
 	int cnt = 0;
@@ -30,6 +38,21 @@ void print_frame_list(t_frame *head, int n_frames, char *result)
 		++cnt;
 	}
 	printf("%s\n", result);
+}
+
+void print_frame_with_r_bit(t_frame_with_r_bit *frame, int n_frames, char *msg, int fd)
+{
+	char buf[100] = {0};
+
+	for (int i = 0; i < n_frames; i++)
+	{
+		printf("%d(%d)\t", frame[i].page, frame[i].r_bit);
+		sprintf(buf, "%d(%d)\t", frame[i].page, frame[i].r_bit);
+		write(fd, buf, strlen(buf));
+	}
+	printf("%s\n", msg);
+	sprintf(buf, "%s\n", msg);
+	write(fd, buf, strlen(buf));
 }
 
 void init_frame(int *frame, int n_frames)
