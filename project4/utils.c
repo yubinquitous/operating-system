@@ -21,11 +21,15 @@ void print_frame_array(int *frame, int n_frames, char *msg, int fd)
 	write(fd, buf, strlen(buf));
 }
 
-void print_frame_list(t_frame *head, int n_frames, char *result, int fd)
+void print_frame_list(int page, t_frame *head, int n_frames, char *result, int fd)
 {
 	t_frame *tmp = head;
 	int cnt = 0;
+	char buf[100] = {0};
 
+	printf("%d\t", page);
+	sprintf(buf, "%d\t", page);
+	write(fd, buf, strlen(buf));
 	while (tmp->next != NULL)
 	{
 		printf("%d\t", tmp->page);

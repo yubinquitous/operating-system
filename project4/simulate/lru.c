@@ -4,13 +4,12 @@ void simulate_lru(int n_frames, int *page, int fd)
 {
 	t_frame *frame = (t_frame *)malloc(sizeof(t_frame));
 	t_frame *head = frame;
-	t_frame *tail = frame;
 	int page_fault = 0;
 	char is_hit;
 
 	frame->page = 0;
 	frame->next = NULL;
-	print_frame_list(head, n_frames, "START", fd);
+	print_frame_list(0, head, n_frames, "START", fd);
 	for (int i = 0; i < REFERENCE_SIZE; i++)
 	{
 		// check_hit
@@ -27,8 +26,6 @@ void simulate_lru(int n_frames, int *page, int fd)
 				if (cur != head)
 				{
 					prev->next = cur->next;
-					if (cur == tail)
-						tail = prev;
 					cur->next = head;
 					head = cur;
 				}
@@ -39,12 +36,11 @@ void simulate_lru(int n_frames, int *page, int fd)
 		}
 		if (is_hit)
 		{
-			print_frame_list(head, n_frames, "HIT", fd);
+			print_frame_list(page[i], head, n_frames, "HIT!", fd);
 			continue;
 		}
 		// miss
 		++page_fault;
-		tail = cur;
 		if (page_fault <= n_frames) // frame is not full
 		{
 			t_frame *new_frame = (t_frame *)malloc(sizeof(t_frame));
@@ -55,12 +51,12 @@ void simulate_lru(int n_frames, int *page, int fd)
 		else // frame is full
 		{
 			prev->next = cur->next;
-			prev = tail;
+			prev = cur;
 			cur->next = head;
 			cur->page = page[i];
 			head = cur;
 		}
-		print_frame_list(head, n_frames, "miss", fd);
+		print_frame_list(page[i], head, n_frames, "miss", fd);
 	}
 	free_frame_list(head);
 	printf("LRU page fault: %d\n", page_fault);
