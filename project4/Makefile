@@ -22,7 +22,7 @@ all: $(NAME)
 .PHONY: all
 
 $(NAME):	$(OBJ)
-	$(CC) $(CFLAG) $(SRC) -o $(NAME)
+	$(CC) $(CFLAG) -o $@ $^
 
 clean:
 	$(RM) $(OBJ)

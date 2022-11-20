@@ -64,11 +64,6 @@ void init_menu(t_menu *menu)
 		menu->algorithm[i] = 0;
 }
 
-void check_leak(void)
-{
-	system("leaks a.out");
-}
-
 int main(void)
 {
 	t_menu menu;
@@ -85,7 +80,6 @@ int main(void)
 		if (menu.algorithm[i])
 			simulate_algorithm(menu.n_frames, reference, i, fd);
 	}
-	close(fd);			// 결과 파일 닫기
-	atexit(check_leak); // 동적 할당 해제
+	close(fd); // 결과 파일 닫기
 	return (0);
 }
