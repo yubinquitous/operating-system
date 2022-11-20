@@ -15,7 +15,7 @@ void get_reference_with_rb_bit(int fd, t_reference *reference)
 	stdin = dup(STDIN_FILENO); // stdin을 복사
 	dup2(fd, STDIN_FILENO);	   // fd를 stdin으로 복사
 	for (int i = 0; i < REFERENCE_SIZE; i++)
-		scanf("%d(%c)\t", &reference[i].page, &reference[i].rw_bit);
+		scanf("%d(%c) ", &reference[i].page, &reference[i].rw_bit);
 	dup2(stdin, STDIN_FILENO); // stdin 복구
 }
 

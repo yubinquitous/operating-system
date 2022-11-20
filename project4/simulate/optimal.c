@@ -12,7 +12,7 @@ void simulate_optimal(int n_frames, int *reference, int fd)
 	{
 		if (is_hit(frame, n_frames, reference[i])) // hit!
 		{
-			print_frame_array(reference[i], frame, n_frames, "HIT", fd);
+			print_frame_array(reference[i], frame, n_frames, "HIT!", fd);
 			continue;
 		}
 		++page_fault;				// page fault 발생

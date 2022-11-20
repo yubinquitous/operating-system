@@ -24,7 +24,7 @@ int main(void)
 	{
 		page = rand() % 30 + 1;
 		rb_state = rand() % 2 ? 'R' : 'W';
-		dprintf(fd, "%d(%c)\t", page, rb_state);
+		dprintf(fd, "%d(%c) ", page, rb_state);
 	}
 	close(fd);
 	return 0;

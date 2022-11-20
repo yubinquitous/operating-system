@@ -1,7 +1,7 @@
 #include "page_replacement.h"
 
 // 참조 문자열을 생성하는 함수
-void set_reference(t_reference *reference, int input_method)
+void set_reference(int fd, t_reference *reference, int input_method)
 {
 	if (input_method == 1) // 랜덤하게 생성
 	{
@@ -10,9 +10,11 @@ void set_reference(t_reference *reference, int input_method)
 		{
 			reference[i].page = rand() % 30 + 1;		  // 1 ~ 30
 			reference[i].rw_bit = rand() % 2 ? 'R' : 'W'; // R or W
-			printf("%d(%c)\t", reference[i].page, reference[i].rw_bit);
+			printf("%d(%c) ", reference[i].page, reference[i].rw_bit);
+			dprintf(fd, "%d(%c) ", reference[i].page, reference[i].rw_bit);
 		}
 		printf("\n");
+		dprintf(fd, "\n");
 	}
 	else // 사용자 생성 파일 오픈
 	{
@@ -30,9 +32,15 @@ void set_reference(t_reference *reference, int input_method)
 // 입력받은 알고리즘을 수행하는 함수
 void simulate_algorithm(int n_frames, t_reference *reference, int algorithm_type, int fd)
 {
-	int page_reference[REFERENCE_SIZE] = {0};
-	get_page_reference(page_reference, reference);
+	if (algorithm_type == ESC)
+	{
+		simulate_esc(n_frames, reference, fd);
+		return;
+	}
 
+	int page_reference[REFERENCE_SIZE] = {0};
+
+	get_page_reference(page_reference, reference); // 참조 문자열에서 페이지 번호만 추출
 	if (algorithm_type == OPTIMAL)
 		simulate_optimal(n_frames, page_reference, fd);
 	else if (algorithm_type == FIFO)
@@ -43,10 +51,8 @@ void simulate_algorithm(int n_frames, t_reference *reference, int algorithm_type
 		simulate_lru(n_frames, page_reference, fd);
 	else if (algorithm_type == LFU)
 		simulate_lfu(n_frames, page_reference, fd);
-	else if (algorithm_type == SC)
+	else // SC algorithm
 		simulate_sc(n_frames, page_reference, fd);
-	else // esc 알고리즘
-		simulate_esc(n_frames, reference, fd);
 }
 
 // menu 구조체를 초기화하는 함수
@@ -66,11 +72,11 @@ int main(void)
 
 	init_menu(&menu);												 // menu 구조체 초기화
 	input(&menu);													 // menu 구조체에 입력받은 값 저장
-	set_reference(reference, menu.input_method);					 // 참조 페이지 스트링 생성
 	int fd = open("result.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644); // 결과 파일 오픈
 	if (fd < 0)
 		exit_with_msg("파일 오픈 실패");
-	for (int i = 0; i < 7; i++) // 선택한 알고리즘 모두 수행
+	set_reference(fd, reference, menu.input_method); // 참조 페이지 스트링 생성
+	for (int i = 0; i < 7; i++)						 // 선택한 알고리즘 모두 수행
 	{
 		if (menu.algorithm[i])
 			simulate_algorithm(menu.n_frames, reference, i, fd);

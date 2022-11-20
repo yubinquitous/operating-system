@@ -28,9 +28,8 @@ void simulate_esc(int n_frames, t_reference *reference, int fd)
 			if (frame[j].page == reference[i].page) // hit!
 			{
 				is_hit = 1;
-				frame[j].r_bit = 1;				  // r_bit을 1로 설정
-				if (reference[i].rw_bit == W_BIT) // 수정되었다면
-					frame[j].w_bit = 1;			  // w_bit을 1로 설정
+				frame[j].r_bit = 1;								 // r_bit을 1로 설정
+				frame[j].w_bit = (reference[i].rw_bit == W_BIT); // w_bit을 1로 설정
 				break;
 			}
 		}
@@ -43,8 +42,8 @@ void simulate_esc(int n_frames, t_reference *reference, int fd)
 		if (page_fault <= n_frames) // frame이 비어있는 경우
 		{
 			frame[j].page = reference[i].page;
-			frame[j].r_bit = 0;
-			frame[j].w_bit = (reference[i].rw_bit == W_BIT) ? 1 : 0;
+			frame[j].r_bit = 1;
+			frame[j].w_bit = (reference[i].rw_bit == W_BIT);
 		}
 		else // frame이 가득 찬 경우
 		{
@@ -64,8 +63,8 @@ void simulate_esc(int n_frames, t_reference *reference, int fd)
 				if (find_victim)
 				{
 					frame[idx].page = reference[i].page;
-					frame[idx].r_bit = 0;
-					frame[idx].w_bit = (reference[i].rw_bit == W_BIT) ? 1 : 0;
+					frame[idx].r_bit = 1;
+					frame[idx].w_bit = (reference[i].rw_bit == W_BIT);
 					break;
 				}
 				// 단계 2: (0, 1) 찾기
@@ -83,8 +82,8 @@ void simulate_esc(int n_frames, t_reference *reference, int fd)
 				if (find_victim)
 				{
 					frame[idx].page = reference[i].page;
-					frame[idx].r_bit = 0;
-					frame[idx].w_bit = (reference[i].rw_bit == W_BIT) ? 1 : 0;
+					frame[idx].r_bit = 1;
+					frame[idx].w_bit = (reference[i].rw_bit == W_BIT);
 					break;
 				}
 			}
