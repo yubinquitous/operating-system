@@ -2,23 +2,23 @@
 
 void simulate_lru(int n_frames, int *page, int fd)
 {
-	t_frame *frame = (t_frame *)malloc(sizeof(t_frame));
-	t_frame *head = frame;
-	int page_fault = 0;
-	char is_hit;
+	t_frame *frame = (t_frame *)malloc(sizeof(t_frame)); // 프레임 구조체 할당
+	t_frame *head = frame;								 // head 포인터
+	int page_fault = 0;									 // page fault 횟수
+	char is_hit = 0;									 // hit 여부
 
 	frame->page = 0;
 	frame->next = NULL;
 	print_algorithm_start("LRU", n_frames, fd);
 	for (int i = 0; i < REFERENCE_SIZE; i++)
 	{
-		// check_hit
 		t_frame *cur = head;
 		t_frame *prev = NULL;
 		is_hit = 0;
+		// hit 여부 확인
 		for (int j = 0; j < n_frames; j++)
 		{
-			if (cur->next == NULL)
+			if (cur->next == NULL) // 프레임이 비어있다면
 				break;
 			if (cur->page == page[i]) // hit
 			{

@@ -1,8 +1,7 @@
 NAME = a.out
 
 CC = gcc
-CFLAG = -g -fsanitize=address
-# CFLAG = -Wall -Wextra -Werror
+CFLAG = -Wall -Wextra -Werror
 
 SRC = main.c \
 	menu.c \

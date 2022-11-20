@@ -2,30 +2,30 @@
 
 void simulate_optimal(int n_frames, int *reference, int fd)
 {
-	int frame[n_frames];
-	int page_fault = 0;
-	int frame_idx = 0;
+	int frame[n_frames]; // 프레임 배열
+	int page_fault = 0;	 //  page fault 횟수
+	int idx = 0;		 // 교체될 프레임을 가리키는 인덱스
 
-	init_frame(frame, n_frames);
-	print_algorithm_start("OPTIMAL", n_frames, fd);
+	init_frame(frame, n_frames);					// 프레임 배열 초기화
+	print_algorithm_start("OPTIMAL", n_frames, fd); // 알고리즘 정보 출력
 	for (int i = 0; i < REFERENCE_SIZE; i++)
 	{
-		if (is_hit(frame, n_frames, reference[i]))
+		if (is_hit(frame, n_frames, reference[i])) // hit!
 		{
 			print_frame_array(reference[i], frame, n_frames, "HIT", fd);
 			continue;
 		}
-		++page_fault;
-		if (page_fault <= n_frames)
+		++page_fault;				// page fault 발생
+		if (page_fault <= n_frames) // 프레임이 비어있다면
 		{
-			frame[frame_idx] = reference[i];
-			frame_idx = (frame_idx + 1) % n_frames;
+			frame[idx] = reference[i];
+			idx = (idx + 1) % n_frames;
 		}
-		else
+		else // 프레임이 가득 차있다면
 		{
 			int max_idx = 0;
 			int max_dist = 0;
-			for (int j = 0; j < n_frames; j++)
+			for (int j = 0; j < n_frames; j++) // 가장 오랫동안 쓰이지 않은 page를 찾는다.
 			{
 				int dist = 0;
 				for (int k = i + 1; k < REFERENCE_SIZE; k++)
@@ -40,9 +40,9 @@ void simulate_optimal(int n_frames, int *reference, int fd)
 					max_idx = j;
 				}
 			}
-			frame[max_idx] = reference[i];
+			frame[max_idx] = reference[i]; // 가장 오랫동안 쓰이지 않은 page를 교체한다.
 		}
 		print_frame_array(reference[i], frame, n_frames, "miss", fd);
 	}
-	print_result("OPTIMAL", page_fault, fd);
+	print_result("OPTIMAL", page_fault, fd); // page fault 횟수 출력
 }

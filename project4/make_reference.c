@@ -5,6 +5,8 @@
 #include <unistd.h>
 #include <string.h>
 
+#define REFERENCE_SIZE 500
+
 int main(void)
 {
 	int page, fd;
@@ -18,7 +20,7 @@ int main(void)
 		return 1;
 	}
 	srand((unsigned int)time(NULL)); // 시드 설정
-	for (int i = 0; i < 500; i++)
+	for (int i = 0; i < REFERENCE_SIZE; i++)
 	{
 		page = rand() % 30 + 1;
 		rb_state = rand() % 2 ? 'R' : 'W';

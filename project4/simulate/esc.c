@@ -2,11 +2,11 @@
 
 void simulate_esc(int n_frames, t_reference *reference, int fd)
 {
-	t_frame_with_rw_bit frame[n_frames];
-	int page_fault = 0;	  // page fault 횟수
-	char is_hit;		  // hit 여부
-	int idx = 0;		  // 교체될 프레임을 가리키는 인덱스
-	char find_victim = 0; // victim을 찾았는지 확인하는 변수
+	t_frame_with_rw_bit frame[n_frames]; // 프레임 구조체 배열
+	int page_fault = 0;					 // page fault 횟수
+	char is_hit;						 // hit 여부
+	int idx = 0;						 // 교체될 프레임을 가리키는 인덱스
+	char find_victim = 0;				 // victim을 찾았는지 확인하는 변수
 
 	// frame 초기화
 	for (int i = 0; i < n_frames; i++)
