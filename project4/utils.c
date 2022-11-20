@@ -48,6 +48,7 @@ void print_algorithm_start(char *algorithm_type, int n_frames, int fd)
 	printf("%10s", "Result\n");
 	dprintf(fd, "%10s", "Result\n");
 }
+
 void print_frame_array(int page, int *frame, int n_frames, char *result, int fd)
 {
 	char buf[100] = {0};

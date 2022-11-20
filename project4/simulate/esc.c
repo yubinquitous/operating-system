@@ -1,79 +1,96 @@
 #include "../page_replacement.h"
 
-void simulate_esc(int n_frames, int *reference, int fd)
+void simulate_esc(int n_frames, t_reference *reference, int fd)
 {
-	t_frame_with_rb_bit frame[n_frames];
-	int page_fault = 0;
-	char is_hit;
-	int idx = 0;
+	t_frame_with_rw_bit frame[n_frames];
+	int page_fault = 0;	  // page fault 횟수
+	char is_hit;		  // hit 여부
+	int idx = 0;		  // 교체될 프레임을 가리키는 인덱스
+	char find_victim = 0; // victim을 찾았는지 확인하는 변수
 
-	// init frame
+	// frame 초기화
 	for (int i = 0; i < n_frames; i++)
 	{
 		frame[i].page = 0;
 		frame[i].r_bit = 0;
-		frame[i].b_bit = 0;
+		frame[i].w_bit = 0;
 	}
+	print_algorithm_start("ESC", n_frames, fd); // 알고리즘 정보 출력
 	for (int i = 0; i < REFERENCE_SIZE; i++)
 	{
-		int cnt = -1;
-		int j;
+		find_victim = 0;
 		is_hit = 0;
+		int j = 0;
 		for (j = 0; j < n_frames; j++)
 		{
-			if (frame[j].page == 0)
+			if (frame[j].page == 0) // 비어있는 프레임이 있으면
 				break;
-			if (frame[j].page == reference[i])
+			if (frame[j].page == reference[i].page) // hit!
 			{
 				is_hit = 1;
-				frame[j].r_bit = 1;
-				frame[j].b_bit = 1;
+				frame[j].r_bit = 1;				  // r_bit을 1로 설정
+				if (reference[i].rw_bit == W_BIT) // 수정되었다면
+					frame[j].w_bit = 1;			  // w_bit을 1로 설정
 				break;
 			}
 		}
-		if (is_hit)
+		if (is_hit) // hit!
 		{
-			print_frame_with_rb_bit(frame, n_frames, "HIT", fd);
-			continue;
+			print_frame_with_rw_bit(reference[i], frame, n_frames, "HIT!", fd); // frame 출력
+			continue;															// 다음 참조값으로 넘어감
 		}
-		++page_fault;
-		if (j < n_frames) // frame is not full
+		++page_fault;				// page fault 발생
+		if (page_fault <= n_frames) // frame이 비어있는 경우
 		{
-			frame[j].page = reference[i];
+			frame[j].page = reference[i].page;
 			frame[j].r_bit = 0;
-			frame[j].b_bit = 1;
+			frame[j].w_bit = (reference[i].rw_bit == W_BIT) ? 1 : 0;
 		}
-		else // frame is full
+		else // frame이 가득 찬 경우
 		{
 			while (1)
 			{
-				if (frame[idx].r_bit == 0 && frame[idx].b_bit == 0)
+				// 단계 1: (0, 0) 찾기
+				for (j = 0; j < n_frames; j++)
 				{
-					frame[idx].page = reference[i];
+					if (frame[idx].r_bit == 0 && frame[idx].w_bit == 0)
+					{
+						find_victim = 1;
+						break;
+					}
+					idx = (idx + 1) % n_frames; // 포인터를 다음 프레임으로 이동
+				}
+				// (0, 0)을 찾았다면 교체 후 반복문 탈출
+				if (find_victim)
+				{
+					frame[idx].page = reference[i].page;
 					frame[idx].r_bit = 0;
-					frame[idx].b_bit = 1;
+					frame[idx].w_bit = (reference[i].rw_bit == W_BIT) ? 1 : 0;
 					break;
 				}
-				else if (frame[idx].r_bit == 0 && frame[idx].b_bit == 1)
+				// 단계 2: (0, 1) 찾기
+				for (j = 0; j < n_frames; j++)
 				{
-					frame[idx].r_bit = 0;
-					frame[idx].b_bit = 0;
+					if (frame[idx].r_bit == 0 && frame[idx].w_bit == 1)
+					{
+						find_victim = 1;
+						break;
+					}
 					idx = (idx + 1) % n_frames;
+					frame[j].r_bit = 0; // 지나쳐가는 모든 프레임의 사용 비트를 0으로 설정
 				}
-				else if (frame[idx].r_bit == 1 && frame[idx].b_bit == 0)
+				// (0, 1)을 찾았다면
+				if (find_victim)
 				{
+					frame[idx].page = reference[i].page;
 					frame[idx].r_bit = 0;
-					idx = (idx + 1) % n_frames;
-				}
-				else if (frame[idx].r_bit == 1 && frame[idx].b_bit == 1)
-				{
-					frame[idx].r_bit = 0;
-					frame[idx].b_bit = 0;
-					idx = (idx + 1) % n_frames;
+					frame[idx].w_bit = (reference[i].rw_bit == W_BIT) ? 1 : 0;
+					break;
 				}
 			}
+			idx = (idx + 1) % n_frames; // 포인터를 다음 프레임으로 이동
 		}
-		print_frame_with_rb_bit(frame, n_frames, "MISS", fd);
+		print_frame_with_rw_bit(reference[i], frame, n_frames, "miss", fd); // frame 출력
 	}
-	printf("page fault: %d\n", page_fault);
+	print_result("ESC", page_fault, fd); // page fault 횟수 출력
 }
