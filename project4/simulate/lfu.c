@@ -25,7 +25,7 @@ void simulate_lfu(int n_frames, int *page, int fd)
 		if (is_hit(frame, n_frames, page[i]))
 		{
 			++counter[page[i] - 1];
-			print_frame_array(frame, n_frames, "HIT", fd);
+			print_frame_array(frame, n_frames, "HIT!", fd);
 			continue;
 		}
 		++page_fault;
@@ -51,6 +51,5 @@ void simulate_lfu(int n_frames, int *page, int fd)
 		++counter[page[i] - 1];
 		print_frame_array(frame, n_frames, "miss", fd);
 	}
-	// test_print_frame(frame, n_frames); // test
-	printf("LFU page fault: %d\n", page_fault);
+	print_result("LFU", page_fault, fd);
 }

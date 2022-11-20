@@ -77,6 +77,8 @@ void free_frame_list(t_frame *head);
 int *get_page_reference(int *page_reference, t_reference *reference);
 void get_reference_with_rb_bit(int fd, t_reference *reference);
 
+void print_result(char *algorithm_type, int page_fault, int fd);
+
 // simulate
 void simulate_optimal(int n_frames, int *reference, int fd);
 void simulate_fifo(int n_frames, int *reference, int fd);

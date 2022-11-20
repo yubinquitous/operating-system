@@ -90,6 +90,15 @@ void print_frame_with_r_bit(t_frame_with_r_bit *frame, int n_frames, char *msg, 
 	write(fd, buf, strlen(buf));
 }
 
+void print_result(char *algorithm_type, int page_fault, int fd)
+{
+	char buf[100] = {0};
+
+	printf("\033[0;31m%s page fault: %d\n\n\033[0m", algorithm_type, page_fault);
+	sprintf(buf, "%s page fault: %d\n\n", algorithm_type, page_fault);
+	write(fd, buf, strlen(buf));
+}
+
 void init_frame(int *frame, int n_frames)
 {
 	for (int i = 0; i < n_frames; i++)

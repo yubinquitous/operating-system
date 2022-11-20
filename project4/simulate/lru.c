@@ -59,5 +59,5 @@ void simulate_lru(int n_frames, int *page, int fd)
 		print_frame_list(page[i], head, n_frames, "miss", fd);
 	}
 	free_frame_list(head);
-	printf("LRU page fault: %d\n", page_fault);
+	print_result("LRU", page_fault, fd);
 }

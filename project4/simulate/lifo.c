@@ -12,7 +12,7 @@ void simulate_lifo(int n_frames, int *reference, int fd)
 	{
 		if (is_hit(frame, n_frames, reference[i]))
 		{
-			print_frame_array(frame, n_frames, "HIT", fd);
+			print_frame_array(frame, n_frames, "HIT!", fd);
 			continue;
 		}
 		++page_fault;
@@ -21,5 +21,5 @@ void simulate_lifo(int n_frames, int *reference, int fd)
 			frame_idx = (frame_idx + 1) % n_frames;
 		print_frame_array(frame, n_frames, "miss", fd);
 	}
-	printf("LIFO page fault: %d\n", page_fault);
+	print_result("LIFO", page_fault, fd);
 }

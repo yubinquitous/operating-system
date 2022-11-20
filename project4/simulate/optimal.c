@@ -44,5 +44,5 @@ void simulate_optimal(int n_frames, int *reference, int fd)
 		}
 		print_frame_array(frame, n_frames, "miss", fd);
 	}
-	printf("Optimal page fault: %d\n", page_fault);
+	print_result("OPTIMAL", page_fault, fd);
 }

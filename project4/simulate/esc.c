@@ -1,9 +1,8 @@
 #include "../page_replacement.h"
 
-// second chance closk algorithm (one handed)
-void simulate_sc(int n_frames, int *reference, int fd)
+void simulate_esc(int n_frames, int *reference, int fd)
 {
-	t_frame_with_r_bit frame[n_frames];
+	t_frame_with_rb_bit frame[n_frames];
 	int page_fault = 0;
 	char is_hit;
 	int idx = 0;
@@ -13,6 +12,7 @@ void simulate_sc(int n_frames, int *reference, int fd)
 	{
 		frame[i].page = 0;
 		frame[i].r_bit = 0;
+		frame[i].b_bit = 0;
 	}
 	for (int i = 0; i < REFERENCE_SIZE; i++)
 	{
@@ -27,12 +27,13 @@ void simulate_sc(int n_frames, int *reference, int fd)
 			{
 				is_hit = 1;
 				frame[j].r_bit = 1;
+				frame[j].b_bit = 1;
 				break;
 			}
 		}
 		if (is_hit)
 		{
-			print_frame_with_r_bit(frame, n_frames, "HIT!", fd);
+			print_frame_with_rb_bit(frame, n_frames, "HIT", fd);
 			continue;
 		}
 		++page_fault;
@@ -40,26 +41,39 @@ void simulate_sc(int n_frames, int *reference, int fd)
 		{
 			frame[j].page = reference[i];
 			frame[j].r_bit = 0;
+			frame[j].b_bit = 1;
 		}
 		else // frame is full
 		{
 			while (1)
 			{
-				if (frame[idx].r_bit == 0)
+				if (frame[idx].r_bit == 0 && frame[idx].b_bit == 0)
 				{
 					frame[idx].page = reference[i];
 					frame[idx].r_bit = 0;
+					frame[idx].b_bit = 1;
 					break;
 				}
-				else
+				else if (frame[idx].r_bit == 0 && frame[idx].b_bit == 1)
+				{
+					frame[idx].r_bit = 0;
+					frame[idx].b_bit = 0;
+					idx = (idx + 1) % n_frames;
+				}
+				else if (frame[idx].r_bit == 1 && frame[idx].b_bit == 0)
 				{
 					frame[idx].r_bit = 0;
 					idx = (idx + 1) % n_frames;
 				}
+				else if (frame[idx].r_bit == 1 && frame[idx].b_bit == 1)
+				{
+					frame[idx].r_bit = 0;
+					frame[idx].b_bit = 0;
+					idx = (idx + 1) % n_frames;
+				}
 			}
 		}
-		idx = (idx + 1) % n_frames;
-		print_frame_with_r_bit(frame, n_frames, "miss", fd);
+		print_frame_with_rb_bit(frame, n_frames, "MISS", fd);
 	}
-	print_result("SC", page_fault, fd);
+	printf("page fault: %d\n", page_fault);
 }
