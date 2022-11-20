@@ -39,7 +39,6 @@ void simulate_algorithm(int n_frames, t_reference *reference, int algorithm_type
 	}
 
 	int page_reference[REFERENCE_SIZE] = {0};
-
 	get_page_reference(page_reference, reference); // 참조 문자열에서 페이지 번호만 추출
 	if (algorithm_type == OPTIMAL)
 		simulate_optimal(n_frames, page_reference, fd);
@@ -65,6 +64,11 @@ void init_menu(t_menu *menu)
 		menu->algorithm[i] = 0;
 }
 
+void check_leak(void)
+{
+	system("leaks a.out");
+}
+
 int main(void)
 {
 	t_menu menu;
@@ -81,6 +85,7 @@ int main(void)
 		if (menu.algorithm[i])
 			simulate_algorithm(menu.n_frames, reference, i, fd);
 	}
-	close(fd); // 결과 파일 닫기
+	close(fd);			// 결과 파일 닫기
+	atexit(check_leak); // 동적 할당 해제
 	return (0);
 }

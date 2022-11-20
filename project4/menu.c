@@ -1,6 +1,6 @@
 #include "page_replacement.h"
 
-void set_algorithm(char *algorithm, int num)
+static void set_algorithm(char *algorithm, int num)
 {
 	if (num == 8)
 	{
@@ -38,6 +38,7 @@ static void input_algorithm(t_menu *menu)
 	if (cnt == 0)
 		exit_with_msg("알고리즘을 입력해주세요.");
 	menu->cnt = cnt;
+	free(token);
 	free(line);
 	line = 0;
 }
