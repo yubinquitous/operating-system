@@ -70,8 +70,8 @@ void init_frame(int *frame, int n_frames);
 char is_hit(int *frame, int n_frames, int page);
 void init_frame_list(t_frame *head, t_frame **tail, int n_frames);
 void print_frame_list(int page, t_frame *frame, int n_frames, char *result, int fd);
-void print_frame_array(int *frame, int n_frames, char *msg, int fd);
-void print_frame_with_r_bit(t_frame_with_r_bit *frame, int n_frames, char *msg, int fd);
+void print_frame_array(int page, int *frame, int n_frames, char *msg, int fd);
+void print_frame_with_r_bit(int page, t_frame_with_r_bit *frame, int n_frames, char *msg, int fd);
 void free_frame_list(t_frame *head);
 
 int *get_page_reference(int *page_reference, t_reference *reference);

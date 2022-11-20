@@ -9,7 +9,7 @@ void simulate_lru(int n_frames, int *page, int fd)
 
 	frame->page = 0;
 	frame->next = NULL;
-	print_frame_list(0, head, n_frames, "START", fd);
+	print_frame_list(0, head, n_frames, "LRU START", fd);
 	for (int i = 0; i < REFERENCE_SIZE; i++)
 	{
 		// check_hit

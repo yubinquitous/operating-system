@@ -7,18 +7,18 @@ void simulate_fifo(int n_frames, int *reference, int fd)
 	int frame_idx = 0;
 
 	init_frame(frame, n_frames);
-	print_frame_array(frame, n_frames, "START", fd);
+	print_frame_array(0, frame, n_frames, "FIFO START", fd);
 	for (int i = 0; i < REFERENCE_SIZE; i++)
 	{
 		if (is_hit(frame, n_frames, reference[i]))
 		{
-			print_frame_array(frame, n_frames, "HIT!", fd);
+			print_frame_array(reference[i], frame, n_frames, "HIT!", fd);
 			continue;
 		}
 		++page_fault;
 		frame[frame_idx] = reference[i];
 		frame_idx = (frame_idx + 1) % n_frames;
-		print_frame_array(frame, n_frames, "miss", fd);
+		print_frame_array(reference[i], frame, n_frames, "miss", fd);
 	}
 	print_result("FIFO", page_fault, fd);
 }

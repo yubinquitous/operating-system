@@ -31,18 +31,26 @@ void exit_with_msg(char *msg)
 	exit(1);
 }
 
-void print_frame_array(int *frame, int n_frames, char *msg, int fd)
+void print_frame_array(int page, int *frame, int n_frames, char *result, int fd)
 {
 	char buf[100] = {0};
 
+	// 참조값 출력
+	printf("%d\t\t", page);
+	// 참조값 파일에 저장
+	sprintf(buf, "%d\t\t", page);
+	write(fd, buf, strlen(buf));
 	for (int i = 0; i < n_frames; i++)
 	{
+		// 프레임값 출력
 		printf("%d\t", frame[i]);
+		// 프레임값 파일에 저장
 		sprintf(buf, "%d\t", frame[i]);
 		write(fd, buf, strlen(buf));
 	}
-	printf("%s\n", msg);
-	sprintf(buf, "%s\n", msg);
+	// 결과 (HIT, miss, START) 출력
+	printf("%s\n", result);
+	sprintf(buf, "%s\n", result);
 	write(fd, buf, strlen(buf));
 }
 
@@ -52,12 +60,16 @@ void print_frame_list(int page, t_frame *head, int n_frames, char *result, int f
 	int cnt = 0;
 	char buf[100] = {0};
 
-	printf("%d\t", page);
-	sprintf(buf, "%d\t", page);
+	// 참조값 출력
+	printf("%d\t\t", page);
+	// 참조값 파일에 저장
+	sprintf(buf, "%d\t\t", page);
 	write(fd, buf, strlen(buf));
 	while (tmp->next != NULL)
 	{
+		// 프레임값 출력
 		printf("%d\t", tmp->page);
+		// 프레임값 파일에 저장
 		sprintf(buf, "%d\t", tmp->page);
 		write(fd, buf, strlen(buf));
 		tmp = tmp->next;
@@ -75,18 +87,23 @@ void print_frame_list(int page, t_frame *head, int n_frames, char *result, int f
 	write(fd, buf, strlen(buf));
 }
 
-void print_frame_with_r_bit(t_frame_with_r_bit *frame, int n_frames, char *msg, int fd)
+void print_frame_with_r_bit(int page, t_frame_with_r_bit *frame, int n_frames, char *result, int fd)
 {
 	char buf[100] = {0};
 
+	// 참조값 출력
+	printf("%d\t\t", page);
+	// 참조값 파일에 저장
+	sprintf(buf, "%d\t\t", page);
+	write(fd, buf, strlen(buf));
 	for (int i = 0; i < n_frames; i++)
 	{
 		printf("%d(%d)\t", frame[i].page, frame[i].r_bit);
 		sprintf(buf, "%d(%d)\t", frame[i].page, frame[i].r_bit);
 		write(fd, buf, strlen(buf));
 	}
-	printf("%s\n", msg);
-	sprintf(buf, "%s\n", msg);
+	printf("%s\n", result);
+	sprintf(buf, "%s\n", result);
 	write(fd, buf, strlen(buf));
 }
 

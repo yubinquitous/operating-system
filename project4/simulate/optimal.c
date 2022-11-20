@@ -7,12 +7,12 @@ void simulate_optimal(int n_frames, int *reference, int fd)
 	int frame_idx = 0;
 
 	init_frame(frame, n_frames);
-	print_frame_array(frame, n_frames, "START", fd);
+	print_frame_array(0, frame, n_frames, "OPTIMAL START", fd);
 	for (int i = 0; i < REFERENCE_SIZE; i++)
 	{
 		if (is_hit(frame, n_frames, reference[i]))
 		{
-			print_frame_array(frame, n_frames, "HIT", fd);
+			print_frame_array(reference[i], frame, n_frames, "HIT", fd);
 			continue;
 		}
 		++page_fault;
@@ -42,7 +42,7 @@ void simulate_optimal(int n_frames, int *reference, int fd)
 			}
 			frame[max_idx] = reference[i];
 		}
-		print_frame_array(frame, n_frames, "miss", fd);
+		print_frame_array(reference[i], frame, n_frames, "miss", fd);
 	}
 	print_result("OPTIMAL", page_fault, fd);
 }

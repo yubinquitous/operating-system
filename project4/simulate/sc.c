@@ -14,6 +14,7 @@ void simulate_sc(int n_frames, int *reference, int fd)
 		frame[i].page = 0;
 		frame[i].r_bit = 0;
 	}
+	print_frame_with_r_bit(0, frame, n_frames, "SC START", fd);
 	for (int i = 0; i < REFERENCE_SIZE; i++)
 	{
 		int cnt = -1;
@@ -32,7 +33,7 @@ void simulate_sc(int n_frames, int *reference, int fd)
 		}
 		if (is_hit)
 		{
-			print_frame_with_r_bit(frame, n_frames, "HIT!", fd);
+			print_frame_with_r_bit(reference[i], frame, n_frames, "HIT!", fd);
 			continue;
 		}
 		++page_fault;
@@ -59,7 +60,7 @@ void simulate_sc(int n_frames, int *reference, int fd)
 			}
 		}
 		idx = (idx + 1) % n_frames;
-		print_frame_with_r_bit(frame, n_frames, "miss", fd);
+		print_frame_with_r_bit(reference[i], frame, n_frames, "miss", fd);
 	}
 	print_result("SC", page_fault, fd);
 }
