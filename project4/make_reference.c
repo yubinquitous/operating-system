@@ -12,7 +12,6 @@ int main(void)
 {
 	int page, fd;
 	char rb_state;
-	char buf[20] = {0};
 
 	fd = open("./reference.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd < 0)

@@ -57,17 +57,16 @@ void simulate_algorithm(int n_frames, t_reference *reference, int algorithm_type
 // menu 구조체를 초기화하는 함수
 void init_menu(t_menu *menu)
 {
-	menu->n_frames = 0;
-	menu->input_method = 0;
-	menu->cnt = 0;
-	for (int i = 0; i < 7; i++)
+	menu->n_frames = 0;			// 프레임 수
+	menu->input_method = 0;		// 참조 문자열 생성 방법
+	for (int i = 0; i < 7; i++) // 알고리즘 선택 여부
 		menu->algorithm[i] = 0;
 }
 
 int main(void)
 {
-	t_menu menu;
-	t_reference reference[REFERENCE_SIZE] = {0};
+	t_menu menu;								 // UI menu 구조체
+	t_reference reference[REFERENCE_SIZE] = {0}; // 참조 문자열
 
 	init_menu(&menu);												 // menu 구조체 초기화
 	input(&menu);													 // menu 구조체에 입력받은 값 저장

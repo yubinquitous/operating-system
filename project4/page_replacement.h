@@ -28,10 +28,8 @@ enum e_algorithm_type
 typedef struct s_menu
 {
 	char algorithm[7];
-	char algorithm_all_flag;
 	int n_frames;
 	int input_method;
-	int cnt;
 } t_menu;
 
 typedef struct s_frame
@@ -76,10 +74,9 @@ void print_frame_with_rw_bit(t_reference reference, t_frame_with_rw_bit *frame, 
 void free_frame_list(t_frame *head);
 void print_algorithm_start(char *algorithm_type, int n_frames, int fd);
 void print_algorithm_start_list(char *algorithm_type, int n_frames, int fd);
+void print_result(char *algorithm_type, int page_fault, int fd);
 void get_page_reference(int *page_reference, t_reference *reference);
 void get_reference_with_rb_bit(int fd, t_reference *reference);
-
-void print_result(char *algorithm_type, int page_fault, int fd);
 
 // simulate
 void simulate_optimal(int n_frames, int *reference, int fd);

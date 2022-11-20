@@ -2,7 +2,7 @@
 
 static void set_algorithm(char *algorithm, int num)
 {
-	if (num == 8)
+	if (num == 8) // ALL 선택 시
 	{
 		for (int i = 0; i < 7; i++)
 			algorithm[i] = 1;
@@ -18,10 +18,10 @@ static void input_algorithm(t_menu *menu)
 	char *line = 0;
 	size_t tmp;
 
-	getline(&line, &tmp, stdin);
+	getline(&line, &tmp, stdin); // 알고리즘 입력
 	if (!line)
 		exit_with_msg("메모리 할당에 실패했습니다.");
-	char *token = strtok(line, " ");
+	char *token = strtok(line, " "); // 공백을 기준으로 문자열을 자름
 	while (token != NULL)
 	{
 		// 4개 이상의 알고리즘을 입력받았으면 에러
@@ -37,7 +37,6 @@ static void input_algorithm(t_menu *menu)
 	}
 	if (cnt == 0)
 		exit_with_msg("알고리즘을 입력해주세요.");
-	menu->cnt = cnt;
 	free(token);
 	free(line);
 	line = 0;
@@ -52,7 +51,7 @@ void input(t_menu *menu)
 	printf("Page Replacement 알고리즘 시뮬레이터 선택하시오. (최대 3개)\n");
 	printf("(1) Optimal\t(2) FIFO\t(3) LIFO\t(4) LRU\n");
 	printf("(5) LFU\t\t(6) SC\t\t(7) ESC\t\t(8) ALL\n>> ");
-	input_algorithm(menu);
+	input_algorithm(menu); // 알고리즘 입력
 
 	// 페이지 프레임 개수를 입력하시오
 	printf("페이지 프레임 개수를 입력하시오. (3~10)\n>> ");
