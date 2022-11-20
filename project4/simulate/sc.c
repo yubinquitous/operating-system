@@ -20,7 +20,7 @@ void simulate_sc(int n_frames, int *reference, int fd)
 		is_hit = 0; // hit 여부 초기화
 		for (j = 0; j < n_frames; j++)
 		{
-			if (frame[j].page == 0) // 프레임이 비어있다면
+			if (frame[j].page == 0) // 빈 프레임이 있다면
 				break;
 			if (frame[j].page == reference[i]) // hit!
 			{
@@ -29,13 +29,13 @@ void simulate_sc(int n_frames, int *reference, int fd)
 				break;
 			}
 		}
-		if (is_hit) // hit -> 프레임 출력 후 다음 reference로 넘어간다.
+		if (is_hit) // hit! 다음 reference로 넘어간다.
 		{
 			print_frame_with_r_bit(reference[i], frame, n_frames, "HIT!", fd);
 			continue;
 		}
 		++page_fault;				// page fault 발생
-		if (page_fault <= n_frames) // 프레임이 비어있다면
+		if (page_fault <= n_frames) // 빈 프레임이 있다면
 		{
 			frame[j].page = reference[i];
 			frame[j].r_bit = 0;

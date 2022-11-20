@@ -23,7 +23,7 @@ void simulate_esc(int n_frames, t_reference *reference, int fd)
 		int j = 0;
 		for (j = 0; j < n_frames; j++)
 		{
-			if (frame[j].page == 0) // 비어있는 프레임이 있으면
+			if (frame[j].page == 0)
 				break;
 			if (frame[j].page == reference[i].page) // hit!
 			{
@@ -39,7 +39,7 @@ void simulate_esc(int n_frames, t_reference *reference, int fd)
 			continue;															// 다음 참조값으로 넘어감
 		}
 		++page_fault;				// page fault 발생
-		if (page_fault <= n_frames) // frame이 비어있는 경우
+		if (page_fault <= n_frames) // 비어있는 프레임이 있으면
 		{
 			frame[j].page = reference[i].page;
 			frame[j].r_bit = 1;

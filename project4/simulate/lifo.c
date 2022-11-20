@@ -17,7 +17,7 @@ void simulate_lifo(int n_frames, int *reference, int fd)
 		}
 		++page_fault;												  // page fault 발생
 		frame[idx] = reference[i];									  // 교체될 프레임에 새로운 페이지 삽입
-		if (idx < n_frames - 1)										  // 프레임이 비어있다면
+		if (idx < n_frames - 1)										  // 비어 있는 프레임이 있다면
 			++idx;													  // 포인터(인덱스)를 다음 프레임으로 이동
 		print_frame_array(reference[i], frame, n_frames, "miss", fd); // 프레임 배열 출력
 	}
