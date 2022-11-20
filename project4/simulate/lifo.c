@@ -7,7 +7,7 @@ void simulate_lifo(int n_frames, int *reference, int fd)
 	int frame_idx = 0;
 
 	init_frame(frame, n_frames);
-	print_frame_array(0, frame, n_frames, "LIFO START", fd);
+	print_algorithm_start("LIFO", n_frames, fd);
 	for (int i = 0; i < REFERENCE_SIZE; i++)
 	{
 		if (is_hit(frame, n_frames, reference[i]))

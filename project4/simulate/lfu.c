@@ -17,7 +17,7 @@ void simulate_lfu(int n_frames, int *reference, int fd)
 	int counter[MAX_FRAME] = {0};
 
 	init_frame(frame, n_frames);
-	print_frame_array(0, frame, n_frames, "LFU START", fd);
+	print_algorithm_start("LFU", n_frames, fd);
 	for (int i = 0; i < REFERENCE_SIZE; i++)
 	{
 		if (i != 0 && i % 10 == 0)

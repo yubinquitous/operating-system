@@ -43,7 +43,7 @@ typedef struct s_frame
 typedef struct s_frame_with_r_bit
 {
 	int page;
-	int r_bit;
+	char r_bit;
 	struct s_frame_with_r_bit *next;
 } t_frame_with_r_bit;
 
@@ -73,6 +73,7 @@ void print_frame_list(int page, t_frame *frame, int n_frames, char *result, int 
 void print_frame_array(int page, int *frame, int n_frames, char *msg, int fd);
 void print_frame_with_r_bit(int page, t_frame_with_r_bit *frame, int n_frames, char *msg, int fd);
 void free_frame_list(t_frame *head);
+void print_algorithm_start(char *algorithm_type, int n_frames, int fd);
 
 int *get_page_reference(int *page_reference, t_reference *reference);
 void get_reference_with_rb_bit(int fd, t_reference *reference);

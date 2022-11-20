@@ -31,27 +31,41 @@ void exit_with_msg(char *msg)
 	exit(1);
 }
 
+void print_algorithm_start(char *algorithm_type, int n_frames, int fd)
+{
+	char buf[100] = {0};
+
+	printf("\033[0;32m<< %s algorithm >> \n\033[0m", algorithm_type);
+	dprintf(fd, "<< %s algorithm >>", algorithm_type);
+	printf("%-7s", "page");
+	dprintf(fd, "%-7s", "page");
+	for (int i = 0; i < n_frames; i++)
+	{
+		sprintf(buf, "Frame[%d]", i);
+		printf("%10s", buf);
+		dprintf(fd, "%10s", buf);
+	}
+	printf("%10s", "Result\n");
+	dprintf(fd, "%10s", "Result\n");
+}
 void print_frame_array(int page, int *frame, int n_frames, char *result, int fd)
 {
 	char buf[100] = {0};
 
 	// 참조값 출력
-	printf("%d\t\t", page);
+	printf("%-7d", page);
 	// 참조값 파일에 저장
-	sprintf(buf, "%d\t\t", page);
-	write(fd, buf, strlen(buf));
+	dprintf(fd, "%-7d", page);
 	for (int i = 0; i < n_frames; i++)
 	{
 		// 프레임값 출력
-		printf("%d\t", frame[i]);
+		printf("%10d", frame[i]);
 		// 프레임값 파일에 저장
-		sprintf(buf, "%d\t", frame[i]);
-		write(fd, buf, strlen(buf));
+		dprintf(fd, "%10d", frame[i]);
 	}
 	// 결과 (HIT, miss, START) 출력
-	printf("%s\n", result);
-	sprintf(buf, "%s\n", result);
-	write(fd, buf, strlen(buf));
+	printf("%10s\n", result);
+	dprintf(fd, "%10s\n", result);
 }
 
 void print_frame_list(int page, t_frame *head, int n_frames, char *result, int fd)
@@ -61,30 +75,26 @@ void print_frame_list(int page, t_frame *head, int n_frames, char *result, int f
 	char buf[100] = {0};
 
 	// 참조값 출력
-	printf("%d\t\t", page);
+	printf("%-7d", page);
 	// 참조값 파일에 저장
-	sprintf(buf, "%d\t\t", page);
-	write(fd, buf, strlen(buf));
+	dprintf(fd, "%-7d", page);
 	while (tmp->next != NULL)
 	{
 		// 프레임값 출력
-		printf("%d\t", tmp->page);
+		printf("%10d", tmp->page);
 		// 프레임값 파일에 저장
-		sprintf(buf, "%d\t", tmp->page);
-		write(fd, buf, strlen(buf));
+		dprintf(fd, "%10d", tmp->page);
 		tmp = tmp->next;
 		++cnt;
 	}
 	while (cnt < n_frames)
 	{
-		printf("0\t");
-		sprintf(buf, "0\t");
-		write(fd, buf, strlen(buf));
+		printf("%10s", " ");
+		dprintf(fd, "%10s", " ");
 		++cnt;
 	}
-	printf("%s\n", result);
-	sprintf(buf, "%s\n", result);
-	write(fd, buf, strlen(buf));
+	printf("%10s\n", result);
+	dprintf(fd, "%10s\n", result);
 }
 
 void print_frame_with_r_bit(int page, t_frame_with_r_bit *frame, int n_frames, char *result, int fd)
@@ -92,19 +102,18 @@ void print_frame_with_r_bit(int page, t_frame_with_r_bit *frame, int n_frames, c
 	char buf[100] = {0};
 
 	// 참조값 출력
-	printf("%d\t\t", page);
+	printf("%-7d", page);
 	// 참조값 파일에 저장
-	sprintf(buf, "%d\t\t", page);
-	write(fd, buf, strlen(buf));
+	dprintf(fd, "%-7d", page);
 	for (int i = 0; i < n_frames; i++)
 	{
-		printf("%d(%d)\t", frame[i].page, frame[i].r_bit);
-		sprintf(buf, "%d(%d)\t", frame[i].page, frame[i].r_bit);
-		write(fd, buf, strlen(buf));
+		// 프레임값과 r_bit 출력
+		printf("%7d(%d)", frame[i].page, frame[i].r_bit);
+		// 프레임값과 r_bit 파일에 저장
+		dprintf(fd, "%7d(%d)", frame[i].page, frame[i].r_bit);
 	}
-	printf("%s\n", result);
-	sprintf(buf, "%s\n", result);
-	write(fd, buf, strlen(buf));
+	printf("%10s\n", result);
+	dprintf(fd, "%10s\n", result);
 }
 
 void print_result(char *algorithm_type, int page_fault, int fd)
@@ -112,8 +121,7 @@ void print_result(char *algorithm_type, int page_fault, int fd)
 	char buf[100] = {0};
 
 	printf("\033[0;31m%s page fault: %d\n\n\033[0m", algorithm_type, page_fault);
-	sprintf(buf, "%s page fault: %d\n\n", algorithm_type, page_fault);
-	write(fd, buf, strlen(buf));
+	dprintf(fd, "%s page fault: %d\n\n", algorithm_type, page_fault);
 }
 
 void init_frame(int *frame, int n_frames)

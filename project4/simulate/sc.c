@@ -14,7 +14,7 @@ void simulate_sc(int n_frames, int *reference, int fd)
 		frame[i].page = 0;
 		frame[i].r_bit = 0;
 	}
-	print_frame_with_r_bit(0, frame, n_frames, "SC START", fd);
+	print_algorithm_start("SC", n_frames, fd);
 	for (int i = 0; i < REFERENCE_SIZE; i++)
 	{
 		int cnt = -1;
