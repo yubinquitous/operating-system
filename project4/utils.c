@@ -21,8 +21,6 @@ void get_reference_with_rb_bit(int fd, t_reference *reference)
 	for (i = 0; i < REFERENCE_SIZE; i++)
 	{
 		scanf("%d(%c)", &reference[i].page, &reference[i].rw_bit);
-		if (i != REFERENCE_SIZE - 1)
-			scanf(" ");
 	}
 	dup2(stdin, 0);
 }
@@ -60,15 +58,21 @@ void print_frame_list(int page, t_frame *head, int n_frames, char *result, int f
 	while (tmp->next != NULL)
 	{
 		printf("%d\t", tmp->page);
+		sprintf(buf, "%d\t", tmp->page);
+		write(fd, buf, strlen(buf));
 		tmp = tmp->next;
 		++cnt;
 	}
 	while (cnt < n_frames)
 	{
 		printf("0\t");
+		sprintf(buf, "0\t");
+		write(fd, buf, strlen(buf));
 		++cnt;
 	}
 	printf("%s\n", result);
+	sprintf(buf, "%s\n", result);
+	write(fd, buf, strlen(buf));
 }
 
 void print_frame_with_r_bit(t_frame_with_r_bit *frame, int n_frames, char *msg, int fd)
