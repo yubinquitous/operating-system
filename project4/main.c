@@ -10,7 +10,9 @@ void set_reference(t_reference *reference, int input_method)
 		{
 			reference[i].page = rand() % 30 + 1;		  // 1 ~ 30
 			reference[i].rw_bit = rand() % 2 ? 'R' : 'W'; // R or W
+			printf("%d(%c)\t", reference[i].page, reference[i].rw_bit);
 		}
+		printf("\n");
 	}
 	else // 사용자 생성 파일 오픈
 	{
@@ -43,14 +45,13 @@ void simulate_algorithm(int n_frames, t_reference *reference, int algorithm_type
 		simulate_lfu(n_frames, page_reference, fd);
 	else if (algorithm_type == SC)
 		simulate_sc(n_frames, page_reference, fd);
-	else // esc
+	else // esc 알고리즘
 		simulate_esc(n_frames, reference, fd);
 }
 
 // menu 구조체를 초기화하는 함수
 void init_menu(t_menu *menu)
 {
-	menu->algorithm_all_flag = 0;
 	menu->n_frames = 0;
 	menu->input_method = 0;
 	menu->cnt = 0;

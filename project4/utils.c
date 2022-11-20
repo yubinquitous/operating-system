@@ -15,7 +15,7 @@ void get_reference_with_rb_bit(int fd, t_reference *reference)
 	stdin = dup(STDIN_FILENO); // stdin을 복사
 	dup2(fd, STDIN_FILENO);	   // fd를 stdin으로 복사
 	for (int i = 0; i < REFERENCE_SIZE; i++)
-		scanf("%d(%c)", &reference[i].page, &reference[i].rw_bit);
+		scanf("%d(%c)\t", &reference[i].page, &reference[i].rw_bit);
 	dup2(stdin, STDIN_FILENO); // stdin 복구
 }
 
@@ -84,8 +84,8 @@ void print_frame_list(int page, t_frame *head, int n_frames, char *result, int f
 	}
 	while (cnt < n_frames)
 	{
-		printf("%10s", " ");
-		dprintf(fd, "%10s", " ");
+		printf("%10d", 0);
+		dprintf(fd, "%10d", 0);
 		++cnt;
 	}
 	printf("%10s\n", result);
@@ -140,23 +140,6 @@ void init_frame(int *frame, int n_frames)
 {
 	for (int i = 0; i < n_frames; i++)
 		frame[i] = 0;
-}
-
-// 프레임 연결 리스트를 초기화하는 함수
-void init_frame_list(t_frame *head, t_frame **tail, int n_frames)
-{
-	t_frame *cur = head;
-
-	head->page = 0;
-	for (int i = 0; i < n_frames; i++)
-	{
-		t_frame *new_frame = (t_frame *)malloc(sizeof(t_frame));
-		new_frame->page = 0;
-		cur->next = new_frame;
-		cur = cur->next;
-	}
-	cur->next = NULL;
-	*tail = cur;
 }
 
 // 프레임 연결 리스트 할당 해제하는 함수

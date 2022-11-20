@@ -47,7 +47,8 @@ void simulate_lfu(int n_frames, int *reference, int fd)
 					min_idx = j;
 				}
 			}
-			frame[min_idx] = reference[i]; // 가장 적게 사용된 프레임 교체
+			counter[frame[min_idx] - 1] = 0; // 교체되는 페이지 카운터 배열 초기화
+			frame[min_idx] = reference[i];	 // 가장 적게 사용된 프레임 교체
 		}
 		++counter[reference[i] - 1];								  // 카운터 배열 값 증가
 		print_frame_array(reference[i], frame, n_frames, "miss", fd); // 프레임 배열 출력

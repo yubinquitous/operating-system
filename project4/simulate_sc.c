@@ -99,3 +99,4 @@ void simulate_sc(int n_frames, int *reference)
 		// test_print_frame(frame, n_frames); // test
 		printf("SC page fault: %d\n", page_fault);
 	}
+}
