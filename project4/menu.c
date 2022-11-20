@@ -49,7 +49,7 @@ void input(t_menu *menu)
 	int input_method = -1;
 
 	// Page Replacement 알고리즘 시뮬레이터 선택 (최대 3개)
-	printf("Page Replacement 알고리즘 시뮬레이터 선택 (최대 3개)\n");
+	printf("Page Replacement 알고리즘 시뮬레이터 선택하시오. (최대 3개)\n");
 	printf("(1) Optimal\t(2) FIFO\t(3) LIFO\t(4) LRU\n");
 	printf("(5) LFU\t\t(6) SC\t\t(7) ESC\t\t(8) ALL\n>> ");
 	input_algorithm(menu);

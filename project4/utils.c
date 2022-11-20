@@ -151,8 +151,11 @@ void print_frame_with_rw_bit(t_reference reference, t_frame_with_rw_bit *frame, 
 // page fault 횟수를 출력하는 함수
 void print_result(char *algorithm_type, int page_fault, int fd)
 {
-	printf("\033[0;31m%s page fault: %d\n\n\033[0m", algorithm_type, page_fault);
-	dprintf(fd, "%s page fault: %d\n\n", algorithm_type, page_fault);
+	float page_fault_rate = page_fault > 0 ? page_fault / (float)REFERENCE_SIZE * 100 : 0;
+	printf("\033[0;31m%s page fault: %d\n\033[0m", algorithm_type, page_fault);
+	dprintf(fd, "%s page fault: %d\n", algorithm_type, page_fault);
+	printf("\033[0;31m%s page fault rate: %.2f%%\n\033[0m", algorithm_type, page_fault_rate);
+	dprintf(fd, "%s page fault rate: %.2f%%\n", algorithm_type, page_fault_rate);
 }
 
 // 프레임 배열을 초기화하는 함수
