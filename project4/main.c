@@ -60,9 +60,9 @@ void simulate_algorithm(int n_frames, t_reference *reference, int algorithm_type
 		simulate_lfu(n_frames, page_reference, fd);
 	else if (algorithm_type == SC)
 		simulate_sc(n_frames, page_reference, fd);
-	// simulate_sc(n_frames, reference);
 	else if (algorithm_type == ESC)
-		;
+		simulate_esc(n_frames, reference, fd);
+	;
 }
 
 void init_menu(t_menu *menu)

@@ -37,8 +37,8 @@ void print_algorithm_start(char *algorithm_type, int n_frames, int fd)
 
 	printf("\033[0;32m<< %s algorithm >> \n\033[0m", algorithm_type);
 	dprintf(fd, "<< %s algorithm >>", algorithm_type);
-	printf("%-7s", "page");
-	dprintf(fd, "%-7s", "page");
+	printf("%10s", "page");
+	dprintf(fd, "%10s", "page");
 	for (int i = 0; i < n_frames; i++)
 	{
 		sprintf(buf, "Frame[%d]", i);
@@ -53,9 +53,9 @@ void print_frame_array(int page, int *frame, int n_frames, char *result, int fd)
 	char buf[100] = {0};
 
 	// 참조값 출력
-	printf("%-7d", page);
+	printf("%10d", page);
 	// 참조값 파일에 저장
-	dprintf(fd, "%-7d", page);
+	dprintf(fd, "%10d", page);
 	for (int i = 0; i < n_frames; i++)
 	{
 		// 프레임값 출력
@@ -75,9 +75,9 @@ void print_frame_list(int page, t_frame *head, int n_frames, char *result, int f
 	char buf[100] = {0};
 
 	// 참조값 출력
-	printf("%-7d", page);
+	printf("%10d", page);
 	// 참조값 파일에 저장
-	dprintf(fd, "%-7d", page);
+	dprintf(fd, "%10d", page);
 	while (tmp->next != NULL)
 	{
 		// 프레임값 출력
@@ -102,15 +102,34 @@ void print_frame_with_r_bit(int page, t_frame_with_r_bit *frame, int n_frames, c
 	char buf[100] = {0};
 
 	// 참조값 출력
-	printf("%-7d", page);
+	printf("%10d", page);
 	// 참조값 파일에 저장
-	dprintf(fd, "%-7d", page);
+	dprintf(fd, "%10d", page);
 	for (int i = 0; i < n_frames; i++)
 	{
 		// 프레임값과 r_bit 출력
 		printf("%7d(%d)", frame[i].page, frame[i].r_bit);
 		// 프레임값과 r_bit 파일에 저장
 		dprintf(fd, "%7d(%d)", frame[i].page, frame[i].r_bit);
+	}
+	printf("%10s\n", result);
+	dprintf(fd, "%10s\n", result);
+}
+
+void print_frame_with_rw_bit(t_reference reference, t_frame_with_rw_bit *frame, int n_frames, char *result, int fd)
+{
+	char buf[100] = {0};
+
+	// 참조값 출력
+	printf("%7d(%c)", reference.page, reference.rw_bit);
+	// 참조값 파일에 저장
+	dprintf(fd, "%7d(%c)", reference.page, reference.rw_bit);
+	for (int i = 0; i < n_frames; i++)
+	{
+		// 프레임값과 r_bit 출력
+		printf("%4d(%d, %d)", frame[i].page, frame[i].r_bit, frame[i].w_bit);
+		// 프레임값과 r_bit 파일에 저장
+		dprintf(fd, "%4d(%d, %d)", frame[i].page, frame[i].r_bit, frame[i].w_bit);
 	}
 	printf("%10s\n", result);
 	dprintf(fd, "%10s\n", result);

@@ -70,8 +70,9 @@ void init_frame(int *frame, int n_frames);
 char is_hit(int *frame, int n_frames, int page);
 void init_frame_list(t_frame *head, t_frame **tail, int n_frames);
 void print_frame_list(int page, t_frame *frame, int n_frames, char *result, int fd);
-void print_frame_array(int page, int *frame, int n_frames, char *msg, int fd);
-void print_frame_with_r_bit(int page, t_frame_with_r_bit *frame, int n_frames, char *msg, int fd);
+void print_frame_array(int page, int *frame, int n_frames, char *result, int fd);
+void print_frame_with_r_bit(int page, t_frame_with_r_bit *frame, int n_frames, char *result, int fd);
+void print_frame_with_rw_bit(t_reference reference, t_frame_with_rw_bit *frame, int n_frames, char *result, int fd);
 void free_frame_list(t_frame *head);
 void print_algorithm_start(char *algorithm_type, int n_frames, int fd);
 
@@ -87,5 +88,6 @@ void simulate_lifo(int n_frames, int *reference, int fd);
 void simulate_lru(int n_frames, int *reference, int fd);
 void simulate_lfu(int n_frames, int *reference, int fd);
 void simulate_sc(int n_frames, int *reference, int fd);
+void simulate_esc(int n_frames, t_reference *reference, int fd);
 
 #endif

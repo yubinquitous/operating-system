@@ -13,6 +13,7 @@ SRC = main.c \
 	simulate/lfu.c \
 	simulate/optimal.c \
 	simulate/sc.c \
+	simulate/esc.c
 
 OBJ = $(SRC:%.c=%.o)
 
