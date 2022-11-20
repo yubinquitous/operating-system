@@ -22,8 +22,7 @@ int main(void)
 	{
 		page = rand() % 30 + 1;
 		rb_state = rand() % 2 ? 'R' : 'W';
-		sprintf(buf, "%d(%c)", page, rb_state);
-		write(fd, buf, strlen(buf));
+		dprintf(fd, "%d(%c)", page, rb_state);
 	}
 	close(fd);
 	return 0;
