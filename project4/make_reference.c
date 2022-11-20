@@ -8,7 +8,7 @@
 int main(void)
 {
 	int page, fd;
-	char rb_status;
+	char rb_state;
 	char buf[20] = {0};
 
 	fd = open("./reference.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
@@ -21,8 +21,8 @@ int main(void)
 	for (int i = 0; i < 500; i++)
 	{
 		page = rand() % 30 + 1;
-		rb_status = rand() % 2 ? 'R' : 'W';
-		sprintf(buf, "%d(%c) ", page, rb_status);
+		rb_state = rand() % 2 ? 'R' : 'W';
+		sprintf(buf, "%d(%c)", page, rb_state);
 		write(fd, buf, strlen(buf));
 	}
 	close(fd);

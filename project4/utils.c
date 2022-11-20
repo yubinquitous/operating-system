@@ -1,5 +1,32 @@
 #include "page_replacement.h"
 
+int *get_page_reference(int *page_reference, t_reference *reference)
+{
+	int i;
+
+	for (i = 0; i < REFERENCE_SIZE; i++)
+	{
+		page_reference[i] = reference[i].page;
+	}
+	return page_reference;
+}
+
+void get_reference_with_rb_bit(int fd, t_reference *reference)
+{
+	int i;
+	int stdin;
+
+	stdin = dup(0);
+	dup2(fd, 0);
+	for (i = 0; i < REFERENCE_SIZE; i++)
+	{
+		scanf("%d(%c)", &reference[i].page, &reference[i].rw_bit);
+		if (i != REFERENCE_SIZE - 1)
+			scanf(" ");
+	}
+	dup2(stdin, 0);
+}
+
 void exit_with_msg(char *msg)
 {
 	printf("%s\n", msg);

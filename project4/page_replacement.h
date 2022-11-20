@@ -11,6 +11,9 @@
 #define REFERENCE_SIZE 500
 #define MAX_FRAME 30
 
+#define R_BIT 'R'
+#define W_BIT 'W'
+
 enum e_algorithm_type
 {
 	OPTIMAL = 0,
@@ -44,6 +47,20 @@ typedef struct s_frame_with_r_bit
 	struct s_frame_with_r_bit *next;
 } t_frame_with_r_bit;
 
+typedef struct s_frame_with_rw_bit
+{
+	int page;
+	int r_bit;
+	int w_bit;
+	struct s_frame_with_rw_bit *next;
+} t_frame_with_rw_bit;
+
+typedef struct s_reference
+{
+	int page;
+	char rw_bit;
+} t_reference;
+
 // menu
 void input(t_menu *menu);
 
@@ -56,6 +73,9 @@ void print_frame_list(int page, t_frame *frame, int n_frames, char *result, int 
 void print_frame_array(int *frame, int n_frames, char *msg, int fd);
 void print_frame_with_r_bit(t_frame_with_r_bit *frame, int n_frames, char *msg, int fd);
 void free_frame_list(t_frame *head);
+
+int *get_page_reference(int *page_reference, t_reference *reference);
+void get_reference_with_rb_bit(int fd, t_reference *reference);
 
 // simulate
 void simulate_optimal(int n_frames, int *reference, int fd);
