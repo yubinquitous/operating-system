@@ -9,7 +9,7 @@ void simulate_lru(int n_frames, int *page, int fd)
 
 	frame->page = 0;
 	frame->next = NULL;
-	print_algorithm_start("LRU", n_frames, fd);
+	print_algorithm_start_list("LRU", n_frames, fd);
 	for (int i = 0; i < REFERENCE_SIZE; i++)
 	{
 		t_frame *cur = head;

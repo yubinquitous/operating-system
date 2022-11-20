@@ -45,6 +45,26 @@ void print_algorithm_start(char *algorithm_type, int n_frames, int fd)
 	dprintf(fd, "%10s\n", "Result");
 }
 
+// 알고리즘 정보를 출력하는 함수 - 연결리스트
+void print_algorithm_start_list(char *algorithm_type, int n_frames, int fd)
+{
+	printf("\033[0;32m=============================%s algorithm=============================\n\033[0m", algorithm_type);
+	dprintf(fd, "=============================%s algorithm=============================\n", algorithm_type);
+	printf("%10s", "Page");
+	dprintf(fd, "%10s", "Page");
+	printf("%10s", "Front");
+	dprintf(fd, "%10s", "Front");
+	for (int i = 1; i < n_frames - 1; i++)
+	{
+		printf("%10s", "->");
+		dprintf(fd, "%10s", "->");
+	}
+	printf("%10s", "Rear");
+	dprintf(fd, "%10s", "Rear");
+	printf("%10s\n", "Result");
+	dprintf(fd, "%10s\n", "Result");
+}
+
 // 프레임 배열을 출력하는 함수
 void print_frame_array(int page, int *frame, int n_frames, char *result, int fd)
 {

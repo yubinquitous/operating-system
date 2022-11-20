@@ -75,7 +75,7 @@ void print_frame_with_r_bit(int page, t_frame_with_r_bit *frame, int n_frames, c
 void print_frame_with_rw_bit(t_reference reference, t_frame_with_rw_bit *frame, int n_frames, char *result, int fd);
 void free_frame_list(t_frame *head);
 void print_algorithm_start(char *algorithm_type, int n_frames, int fd);
-
+void print_algorithm_start_list(char *algorithm_type, int n_frames, int fd);
 void get_page_reference(int *page_reference, t_reference *reference);
 void get_reference_with_rb_bit(int fd, t_reference *reference);
 
