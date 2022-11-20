@@ -6,6 +6,7 @@
 #include <string.h>
 
 #define REFERENCE_SIZE 500
+#define MAX_FRAME 30
 
 int main(void)
 {
@@ -22,7 +23,7 @@ int main(void)
 	srand((unsigned int)time(NULL)); // 시드 설정
 	for (int i = 0; i < REFERENCE_SIZE; i++)
 	{
-		page = rand() % 30 + 1;
+		page = rand() % MAX_FRAME + 1;
 		rb_state = rand() % 2 ? 'R' : 'W';
 		dprintf(fd, "%d(%c) ", page, rb_state);
 	}

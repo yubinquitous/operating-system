@@ -8,7 +8,7 @@ void set_reference(int fd, t_reference *reference, int input_method)
 		srand((unsigned int)time(NULL)); // 시드 설정
 		for (int i = 0; i < REFERENCE_SIZE; i++)
 		{
-			reference[i].page = rand() % 30 + 1;		  // 1 ~ 30
+			reference[i].page = rand() % MAX_FRAME + 1;	  // 1 ~ 30
 			reference[i].rw_bit = rand() % 2 ? 'R' : 'W'; // R or W
 			printf("%d(%c) ", reference[i].page, reference[i].rw_bit);
 			dprintf(fd, "%d(%c) ", reference[i].page, reference[i].rw_bit);

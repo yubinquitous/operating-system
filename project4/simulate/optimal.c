@@ -16,7 +16,7 @@ void simulate_optimal(int n_frames, int *reference, int fd)
 			continue;
 		}
 		++page_fault;				// page fault 발생
-		if (page_fault <= n_frames) // 프레임이 비어있다면
+		if (page_fault <= n_frames) // 프레임이 가득 차지 않았다면
 		{
 			frame[idx] = reference[i];
 			idx = (idx + 1) % n_frames;

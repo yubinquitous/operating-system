@@ -93,7 +93,7 @@ void print_frame_list(int page, t_frame *head, int n_frames, char *result, int f
 	printf("%10d", page);
 	// 참조값 파일에 저장
 	dprintf(fd, "%10d", page);
-	while (tmp->next != NULL)
+	while (tmp != NULL)
 	{
 		// 프레임값 출력
 		printf("%10d", tmp->page);

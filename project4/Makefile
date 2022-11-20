@@ -1,7 +1,7 @@
 NAME = a.out
 
 CC = gcc
-CFLAG = -Wall -Wextra -Werror
+CFLAG = -Wall -Wextra -Werror -fsanitize=address -g
 
 SRC = main.c \
 	menu.c \
@@ -14,7 +14,7 @@ SRC = main.c \
 	simulate/sc.c \
 	simulate/esc.c
 
-OBJ = $(SRC:%.c=%.o)
+OBJ = $(SRC:.c=.o)
 
 RM = rm -f
 
@@ -23,6 +23,9 @@ all: $(NAME)
 
 $(NAME):	$(OBJ)
 	$(CC) $(CFLAG) -o $@ $^
+
+%.o: %.c
+	$(CC) $(CFLAG) -c $< -o $@
 
 clean:
 	$(RM) $(OBJ)
