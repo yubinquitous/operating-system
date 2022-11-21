@@ -37,7 +37,7 @@ void simulate_lfu(int n_frames, int *reference, int fd)
 			}
 			frame[min_idx] = reference[i]; // 가장 적게 사용된 프레임 교체
 		}
-		counter[reference[i] - 1] = 1;								  // 카운터 배열 값 증가
+		counter[reference[i] - 1] = 1;								  // 카운터 배열 값 1로 설정
 		print_frame_array(reference[i], frame, n_frames, "miss", fd); // 프레임 배열 출력
 	}
 	print_result("LFU", page_fault, fd); // page fault 횟수 출력

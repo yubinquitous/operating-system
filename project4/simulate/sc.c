@@ -47,7 +47,6 @@ void simulate_sc(int n_frames, int *reference, int fd)
 				if (frame[idx].r_bit == 0) // r_bit가 0이면
 				{
 					frame[idx].page = reference[i];
-					frame[idx].r_bit = 0;
 					break;
 				}
 				else // r_bit가 1이면

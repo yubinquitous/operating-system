@@ -29,7 +29,7 @@ void simulate_esc(int n_frames, t_reference *reference, int fd)
 			{
 				is_hit = 1;
 				frame[j].r_bit = 1;								 // r_bit을 1로 설정
-				frame[j].w_bit = (reference[i].rw_bit == W_BIT); // w_bit을 1로 설정
+				frame[j].w_bit = (reference[i].rw_bit == W_BIT);
 				break;
 			}
 		}
