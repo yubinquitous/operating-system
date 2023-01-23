@@ -1,9 +1,9 @@
 # Operating System
 |project| description |
 |:---:|:---:|
-| [project2](#xv6에-system-call-추가) | xv6에 system call 추가 |
-| [project3](#xv6에-ssu-scheduler-구현) | xv6에 SSU Scheduler 구현 |
-| [project4](#page-replacement-simulator) | page replacement simulator |
+| [:two:](#xv6에-system-call-추가) | xv6에 system call 추가 |
+| [:three:](#xv6에-ssu-scheduler-구현) | xv6에 SSU Scheduler 구현 |
+| [:four:](#page-replacement-simulator) | page replacement simulator |
 
 
 ## xv6에 system call 추가
